@@ -1,18 +1,25 @@
 <template>
     <div id="app">
+        <Player :playerId="playerId" :server="server" />
     </div>
 </template>
 
 <script>
+import Player from "./Player.vue";
 export default {
     name: "App",
     props: [],
     data: function () {
-        return {};
+        return {
+            playerId: "26522940",
+            server: "蝶恋花",
+        };
     },
     computed: {},
     methods: {},
-    components: {},
+    components: {
+        Player,
+    },
 };
 </script>
 
