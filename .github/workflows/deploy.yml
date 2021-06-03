@@ -1,34 +1,47 @@
-name: Github Pages
-on:
-  push:
-    branches:
-      - master
+name: Node.js Package
+
+on: [release]
+
+# on:
+#   release:
+#     types: [created]
+
 jobs:
-  build-and-deploy:
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: 12
+  #     - run: npm ci
+  #     - run: npm test
+
+  publish-npm:
+    # needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
-
-      - name: Install && Build
-        run: |
-          npm install
-          npm run build
-
-      - name: Github Pages
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: dist
-          CLEAN: true
-          # CLEAN_EXCLUDE: '["css", "js"]'
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+      # - run: npm ci
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-      - name: OSS
-        uses: manyuanrong/setup-ossutil@v2.0
+  publish-gpr:
+    # needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
         with:
-          endpoint: "oss-cn-hangzhou.aliyuncs.com"
-          access-key-id: ${{secrets.AccessKey_ID}}
-          access-key-secret: ${{secrets.Access_Key_Secret}}
-      - run: ossutil cp -rf dist oss://jx3box/static/$repo
-      - run: ossutil cp -rf dist oss://jx3box-www/$repo
+          node-version: 12
+          registry-url: https://npm.pkg.github.com/
+          scope: '@jx3box'
+      # - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
