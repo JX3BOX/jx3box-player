@@ -86,7 +86,7 @@
   "atLunarattackPowerPercent": "阴性攻击（百分比）",
   "atSolarattackPowerBase": "阳性攻击",
   "atSolarattackPowerPercent": "阳性攻击（百分比）",
-  "atPhysicsattackPowerBase": "外攻攻击",
+  "atPhysicsAttackPowerBase": "外攻攻击",
   "atPhysicsattackPowerPercent": "外攻攻击（百分比）",
   "atSkillPhysicsDamagePercent": "外功基础伤害（百分比）",
   "atSkillLunarDamagePercent": "阴性基础伤害（百分比）",
