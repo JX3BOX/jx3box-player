@@ -7,7 +7,7 @@
   </div>
 </template>
 <script>
-import info from '@/components/json/info.json'
+import info from '@/assets/data/attr.json'
 export default {
   name: 'Panel',
   props: ['data'],
