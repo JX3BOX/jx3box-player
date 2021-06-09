@@ -29,13 +29,7 @@ export default {
       return __imgPath + 'image/xf/' + id + '.png'
     },
     infoname: function(id) {
-      console.log(id)
-      console.log(info[id])
-      //TODO 外功攻击 返回的是 undefined
-      if (info[id]) {
-        return info[id]
-      }
-      return id
+      return info[id]
     },
   },
   created: function() {
