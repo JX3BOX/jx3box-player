@@ -11,8 +11,8 @@ export default {
     props: [],
     data: function () {
         return {
-            // playerId: "26522940",
-            playerId: "33146204",
+            playerId: "26522940",
+            // playerId: "33146204",
             server: "蝶恋花",
         };
     },

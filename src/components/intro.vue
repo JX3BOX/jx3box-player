@@ -22,8 +22,15 @@ export default {
             userxf: [],
         };
     },
-    infoname: function(id) {
-      return info[id]
+    computed: {},
+    methods: {},
+    filters: {
+        xficon: function (id) {
+            return __imgPath + "image/xf/" + id + ".png";
+        },
+        infoname: function (id) {
+            return info[id];
+        },
     },
     created: function () {
         if (this.data) {
@@ -33,8 +40,7 @@ export default {
                 }
             }
         }
-
-        // console.log(this.data, "intro");
+        console.log(this.data, "intro");
     },
 };
 </script>
