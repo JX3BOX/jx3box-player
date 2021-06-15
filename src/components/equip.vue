@@ -17,9 +17,13 @@
           </div>
           <div class="u-line u-info">
             <span v-for="c in item.ModifyType" :key="c.Desc"
-              >{{ c.Attrib.GeneratedMagic }} <b v-if="item.StrengthLevel > 0"> + ({{ c.Param1Max | refine(item.StrengthLevel) }})</b></span
+              ><span v-if="c.Attrib.GeneratedMagic"
+                >{{ c.Attrib.GeneratedMagic }} <b v-if="item.StrengthLevel > 0"> ( + {{ c.Param1Max | refine(item.StrengthLevel) }})</b></span
+              >
+              <span class="desc" v-else>{{ c.Attrib.Desc }}</span></span
             >
           </div>
+          <div class="u-line" v-if="item.Desc !== '' && item.UcPos == '9'">{{ item.Desc | txtwrap }}</div>
           <!-- 装备锻造附魔 -->
           <div class="u-line u-chant" v-if="item.WPermanentEnchant">
             <!-- <span>{{ item.WPermanentEnchant.Name }}</span> -->
@@ -28,12 +32,15 @@
             </span>
           </div>
           <!-- 装备大附魔 -->
-          <!-- <div class="u-line" v-if="item.WTemporaryEnchant">
-              <span>{{ item.WTemporaryEnchant.Name }}</span>
-            </div> -->
+          <div class="u-line u-enchant" v-if="item.WTemporaryEnchant">
+            <span class="name">{{ item.WTemporaryEnchant.Name }}</span>
+            <span>{{ item.WTemporaryEnchant.ID | enchant }}</span>
+          </div>
           <!-- 石头镶嵌 -->
           <div class="u-line u-stone" v-if="item.FiveStone">
-            <span v-for="c in item.FiveStone" :key="c.Desc"> <img class="u-img" v-if="c.Icon" :src="c.Icon.FileName" alt="" />{{ c.Attrib.GeneratedMagic }}</span>
+            <span v-for="c in item.FiveStone" :key="c.Desc">
+              <span v-if="c.Level !== '0'"> <img class="u-img" v-if="c.Icon" :src="c.Icon.FileName" alt="" />{{ c.Attrib.GeneratedMagic }} </span>
+            </span>
           </div>
           <!-- 五彩石 -->
           <div class="u-color" v-if="item.ColorStone">
@@ -42,6 +49,20 @@
               <!-- <span class="name">{{ item.ColorStone.Name }}</span> -->
               <span v-for="c in item.ColorStone.Attributes" :key="c.Desc">{{ c.Attrib.GeneratedMagic }}</span>
             </div>
+          </div>
+          <!-- 套装介绍 -->
+          <div class="u-line u-set" v-if="item.Set">
+            <span v-for="c in item.Set" :key="c.Desc" :class="setnum(item.SetList, setlist, c.SetNum)"
+              ><span>[{{ c.SetNum }}] {{ c.Attrib.Desc || c.Attrib.GeneratedMagic }} </span></span
+            >
+
+            <span class="u-txt">已装备：</span>
+            <span v-for="(c, i) in item.SetList" :key="i" :class="c | setwquip(setlist)">
+              {{ c }}
+            </span>
+          </div>
+          <div class="u-line" v-if="item.Desc !== ''">
+            {{ item.Desc }}
           </div>
           <!-- 装备品级 -->
           <div class="u-line u-level">
@@ -59,16 +80,34 @@
   </div>
 </template>
 <script>
+import enchant from '@jx3box/jx3box-data/data/bps/enchant.json'
 export default {
   name: 'Equip',
   props: ['data', 'styleImg'],
   data: function() {
     return {
       equipUserImg: '',
+      setlist: [],
     }
   },
   computed: {},
   filters: {
+    setwquip: function(id, setlist) {
+      for (let i = 0; i < setlist.length; i++) {
+        if (id == setlist[i]) {
+          return 'setwquip'
+        }
+      }
+      return ''
+    },
+    enchant: function(id) {
+      return enchant[id]
+    },
+    txtwrap: function(val) {
+      let a = val.split('\\n')
+      a = a.join('')
+      return a
+    },
     placement: function(val, style) {
       if (style !== '') {
         if (val == '0' || val == '1' || val == '2') {
@@ -128,16 +167,40 @@ export default {
     quality: function(val) {
       if (val > '5000') {
         return 'eq'
-      } else{
+      } else {
         return ''
       }
     },
   },
-  methods: {},
+  methods: {
+    getsetlist: function() {
+      let list = []
+      for (let i = 0; i < this.data.length; i++) {
+        list.push(this.data[i].Name)
+      }
+      this.setlist = list.filter((item, index) => {
+        return list.indexOf(item) === index
+      })
+    },
+    setnum: function(list, setlist, nums) {
+      nums = ~~nums
+      let num = 0
+      for (let i = 0; i < setlist.length; i++) {
+        if (list.indexOf(setlist[i]) !== -1) { 
+          num += 1 
+        }
+      } 
+      if (num >= nums) {
+        return 'setwquip'
+      }
+      return ''
+    },
+  },
   created: function() {
     if (this.styleImg) {
       this.equipUserImg = 'equipUserImg'
     }
+    this.getsetlist()
   },
 }
 </script>
