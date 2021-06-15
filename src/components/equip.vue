@@ -23,7 +23,7 @@
               <span class="desc" v-else>{{ c.Attrib.Desc }}</span></span
             >
           </div>
-          <div class="u-line" v-if="item.Desc !== '' && item.UcPos == '9'">{{ item.Desc | txtwrap }}</div>
+          <div class="u-line" v-if="item.Desc !== '' && item.UcPos == '9'">{{ item.Desc }}</div>
           <!-- 装备锻造附魔 -->
           <div class="u-line u-chant" v-if="item.WPermanentEnchant">
             <!-- <span>{{ item.WPermanentEnchant.Name }}</span> -->
@@ -103,11 +103,7 @@ export default {
     enchant: function(id) {
       return enchant[id]
     },
-    txtwrap: function(val) {
-      let a = val.split('\\n')
-      a = a.join('')
-      return a
-    },
+
     placement: function(val, style) {
       if (style !== '') {
         if (val == '0' || val == '1' || val == '2') {
@@ -186,10 +182,10 @@ export default {
       nums = ~~nums
       let num = 0
       for (let i = 0; i < setlist.length; i++) {
-        if (list.indexOf(setlist[i]) !== -1) { 
-          num += 1 
+        if (list.indexOf(setlist[i]) !== -1) {
+          num += 1
         }
-      } 
+      }
       if (num >= nums) {
         return 'setwquip'
       }
