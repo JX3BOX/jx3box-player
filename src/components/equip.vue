@@ -201,5 +201,5 @@ export default {
 }
 </script>
 <style scoped lang="less">
-@import '../assets/css/components/equip.less';
+@import '../assets/css/equip.less';
 </style>

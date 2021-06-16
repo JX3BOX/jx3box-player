@@ -12,11 +12,11 @@ export default {
     data: function () {
         return {
             // playerId: "31864485",
-            playerId: "26522940",
-            // playerId: "21041450",
-            
-            // playerId: "33146204",
+            playerId: "26522940",       //浮烟七秀
             server: "蝶恋花",
+            
+            // playerId: "21041450",
+            // playerId: "33146204",
             // server: "唯我独尊",
         };
     },
@@ -29,5 +29,7 @@ export default {
 </script>
 
 <style lang="less">
-@import "./assets/css/app.less";
+#app{
+    padding:200px;
+}
 </style>
