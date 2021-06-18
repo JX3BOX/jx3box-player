@@ -13,6 +13,7 @@ export default {
         return {
             // playerId: "31864485",
             playerId: "26522940",       //浮烟七秀
+            // playerId: "33154610",       //醉栩蓬莱
             server: "蝶恋花",
             
             // playerId: "21041450",
