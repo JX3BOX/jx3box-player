@@ -1,51 +1,44 @@
 <template>
     <div class="w-player-overview">
-        <!-- <div class="m-line" v-for="(item, key) in datas" :key="key">
-            <span>{{ key | infoname }}</span>
-            <span>{{ item }}</span>
-        </div> -->
+        <h2 class="u-title">角色属性</h2>
+        <div class="u-item" v-for="(item,i) in result" :key="i">
+            <span class="u-key">{{ item.key | showAttrName }}</span>
+            <span class="u-val">{{ item.val }}</span>
+        </div>
     </div>
 </template>
 <script>
-import info from "@/assets/data/attr.json";
+import attrMap from "@/assets/data/attr.json";
 export default {
     name: "Overview",
     props: ["data"],
     data: function () {
-        return {
-            qixue: [],
-        };
+        return {};
     },
-    computed: {},
-    methods: {},
-    filters: {
-        infoname: function (id) {
-            if (info[id]) {
-                return info[id];
-            }
-            return id;
+    computed: {
+        result: function () {
+            // TODO:根据计算方案对data原始数据进行加工
+            return [
+                {
+                    key: "atMagicCriticalStrike",
+                    val: "16.11%",
+                },
+            ];
         },
     },
-    created: function () {
-        this.qixue = this.data.qiXueId;
-        this.datas = this.data;
-        for (const i in this.datas) {
-            delete this.data.qixueList;
-            delete this.data.qiXueId;
-        }
-        console.log(this.datas);
-        // console.log(this.data,'panel')
+    methods: {},
+    filters: {
+        showAttrName: function (key) {
+            if (attrMap[key]) {
+                return attrMap[key];
+            }
+            return "";
+        },
     },
+    created: function () {},
 };
 </script>
 
 <style scoped lang="less">
-.m-user-panel {
-    padding: 10px;
-    .m-line {
-        display: flex;
-        justify-content: space-between;
-        .mb(10px);
-    }
-}
+@import "../assets/css/overview.less";
 </style>
