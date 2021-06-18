@@ -2,12 +2,12 @@
     <div class="w-player" v-loading="loading">
         <div class="w-player-box" v-if="data">
             <!-- 基本信息 -->
-            <Basic :data="data" />
+            <Basic :data="data" :role="role" />
 
             <!-- 装备信息 -->
             <div class="w-player-primary">
                 <!-- 装备预览 -->
-                <Equip :data="equip_data" :styleImg="true" />
+                <Equip :data="equip_data" :showEquipName="true" :showPosition="true"/>
 
                 <!-- 面板数据 -->
                 <Overview :data="data" />
@@ -28,7 +28,7 @@ import Overview from "./components/overview.vue";
 import Talent from "./components/talent.vue";
 export default {
     name: "Player",
-    props: ["playerId", "server"],
+    props: ["playerId", "server", "role"],
     components: {},
     data: function () {
         return {

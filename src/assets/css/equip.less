@@ -1,169 +1,172 @@
-.m-user-equip {
-  display: flex;
-  flex-wrap: wrap;
-  .m-item {
+.w-player-equip {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.w-player-equip-item-container {
     cursor: pointer;
     .mr(10px);
     .mb(20px);
-  }
-  .m-img {
+}
+
+.w-player-equip-item-detail {
+    display: flex;
+    flex-direction: column;
+    max-width: 240px;
+    .u-line {
+        display: flex;
+        flex-direction: column;
+        .fz(13px, 1.5);
+        padding-bottom: 5px;
+    }
+    .u-name {
+        .name {
+            .fz(15px);
+            .color(#f39);
+        }
+    }
+    .u-chant {
+        .color(#0366d6);
+    }
+    .u-stone {
+        .color(#01c79d);
+        span {
+            .mb(5px);
+            display: flex;
+            align-items: center;
+            img {
+                .size(24px);
+                .mr(5px);
+            }
+        }
+    }
+    .u-info {
+        .color(#01c79d);
+        .desc {
+            .color(#d93);
+        }
+    }
+    .u-color {
+        display: flex;
+        align-items: center;
+        .mb(10px);
+        .color(#01c79d);
+        .u-line {
+            padding-bottom: 0;
+        }
+        img {
+            .mr(5px);
+        }
+    }
+    .u-enchant {
+        .fz(12px);
+        .color(#d93);
+        .name {
+            .color(#c81);
+        }
+    }
+    .u-set {
+        .u-txt {
+            padding-top: 10px;
+        }
+        .setwquip {
+            .color(#3585de);
+        }
+    }
+    .u-level {
+        .name {
+            .color(#f93);
+        }
+    }
+}
+
+.w-player-equip-item-icon {
     display: flex;
     flex-direction: column;
     align-items: center;
     i {
-      .pr;
-      .r(4px);
-      .clip;
-      img {
-        .db;
-      }
+        .pr;
+        .r(4px);
+        .clip;
+        img {
+            .db;
+        }
     }
     .eq {
-      &::after {
-        content: '';
-        border: 2px solid #be5dbc;
-        .r(4px);
-        .lt(0, 0);
+        &::after {
+            content: "";
+            border: 2px solid #be5dbc;
+            .r(4px);
+            .lt(0, 0);
+            .pa;
+            .full;
+            box-sizing: border-box;
+            .z(1);
+        }
+    }
+    span {
+        .x;
+        .db;
+        .clip;
+        .fz(13px, 1.8);
+        width: 68px;
+        white-space: nowrap;
+        word-wrap: normal;
+        word-break: keep-all;
+        text-overflow: ellipsis;
+    }
+}
+
+.showEquipName {
+    display: flex;
+    justify-content: space-between;
+
+    .size(480px, 680px);
+    .pr;
+    // background: url(../img/bg.png) center no-repeat;
+    // border: 1px solid #ddd;
+    .r(3px);
+    .u-img {
         .pa;
-        .full;
-        box-sizing: border-box;
-        .z(1);
-      }
+        .pointer;
     }
-    span {
-      .x;
-      .db;
-      .clip;
-      .fz(13px, 1.8);
-      width: 68px;
-      white-space: nowrap;
-      word-wrap: normal;
-      word-break: keep-all;
-      text-overflow: ellipsis;
+    .equip0 {
+        .lt(120px, 580px);
     }
-  }
-}
-.equipUserImg {
-  display: flex;
-  justify-content: space-between;
-
-  .size(480px, 680px);
-  .pr;
-  background: url(../img/bg.png) center no-repeat;
-  border: 1px solid #ddd;
-  .r(3px);
-  .m-img {
-    .pa;
-    .pointer;
-  }
-  .equip0 {
-    .lt(120px, 580px);
-  }
-  .equip1 {
-    .lt(205px, 580px);
-  }
-  .equip2 {
-    .lt(280px, 580px);
-  }
-  .equip3 {
-    .lt(30px, 200px);
-  }
-  .equip4 {
-    .lt(30px, 50px);
-  }
-  .equip5 {
-    .lt(400px, 260px);
-  }
-  .equip6 {
-    .lt(400px, 400px);
-  }
-  .equip7 {
-    .lt(400px, 470px);
-  }
-  .equip8 {
-    .lt(30px, 360px);
-  }
-  .equip9 {
-    .lt(400px, 330px);
-  }
-  .equip10 {
-    .lt(400px, 120px);
-  }
-  .equip11 {
-    .lt(400px, 190px);
-  }
-  .equip12 {
-    .lt(400px, 50px);
-  }
-}
-
-.m-item-box {
-  display: flex;
-  flex-direction: column;
-  max-width: 240px;
-  .u-line {
-    display: flex;
-    flex-direction: column;
-    .fz(13px, 1.5);
-    padding-bottom: 5px;
-  }
-  .u-name {
-    .name {
-      .fz(15px);
-      .color(#f39);
+    .equip1 {
+        .lt(205px, 580px);
     }
-  }
-  .u-chant {
-    .color(#0366d6);
-  }
-  .u-stone {
-    .color(#01c79d);
-    span {
-      .mb(5px);
-      display: flex;
-      align-items: center;
-      img {
-        .size(24px);
-        .mr(5px);
-      }
+    .equip2 {
+        .lt(280px, 580px);
     }
-  }
-  .u-info {
-    .color(#01c79d);
-    .desc{
-      .color(#d93); 
+    .equip3 {
+        .lt(30px, 200px);
     }
-  }
-  .u-color {
-    display: flex;
-    align-items: center;
-    .mb(10px);
-    .color(#01c79d);
-    .u-line {
-      padding-bottom: 0;
+    .equip4 {
+        .lt(30px, 50px);
     }
-    img {
-      .mr(5px);
+    .equip5 {
+        .lt(400px, 260px);
     }
-  }
-  .u-enchant{
-    .fz(12px);
-    .color(#d93);
-    .name{
-      .color(#c81); 
+    .equip6 {
+        .lt(400px, 400px);
     }
-  }
-  .u-set{ 
-    .u-txt{
-     padding-top: 10px;
+    .equip7 {
+        .lt(400px, 470px);
     }
-    .setwquip{
-      .color(#3585de);
+    .equip8 {
+        .lt(30px, 360px);
     }
-  }
-  .u-level {
-    .name {
-      .color(#f93);
+    .equip9 {
+        .lt(400px, 330px);
     }
-  }
+    .equip10 {
+        .lt(400px, 120px);
+    }
+    .equip11 {
+        .lt(400px, 190px);
+    }
+    .equip12 {
+        .lt(400px, 50px);
+    }
 }

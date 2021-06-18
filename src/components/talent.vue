@@ -1,6 +1,10 @@
 <template>
     <div class="w-player-talent">
         <!-- 角色奇穴 -->
+
+        <!-- 添加心法被动 -->
+        
+        <slot></slot>
     </div>
 </template>
 
