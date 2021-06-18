@@ -3,99 +3,116 @@
     flex-wrap: wrap;
 }
 
-.w-player-equip-item-container {
+.w-player-equip-item {
     cursor: pointer;
-    .mr(10px);
-    .mb(20px);
 }
 
 .w-player-equip-item-detail {
     display: flex;
     flex-direction: column;
-    max-width: 240px;
+    width: 360px;
+
     .u-line {
         display: flex;
         flex-direction: column;
-        .fz(13px, 1.5);
+        .fz(13px,1.8);
         padding-bottom: 5px;
     }
-    .u-name {
-        .name {
+    .u-title {
+        .pr;
+        .u-name {
             .fz(15px);
-            .color(#f39);
+            .bold;
+        }
+        .u-strength{
+            .pa;.rt(0);
+            .fz(12px);
+        }
+        .u-star{
+            .bold;
+            color:rgb(255, 230, 4);
         }
     }
-    .u-chant {
-        .color(#0366d6);
-    }
-    .u-stone {
-        .color(#01c79d);
-        span {
-            .mb(5px);
-            display: flex;
-            align-items: center;
-            img {
-                .size(24px);
-                .mr(5px);
-            }
+
+    .u-info{
+        b{
+            color:#93f;
         }
-    }
-    .u-info {
         .color(#01c79d);
         .desc {
             .color(#d93);
         }
     }
-    .u-color {
-        display: flex;
-        align-items: center;
-        .mb(10px);
+
+    .u-stone {
         .color(#01c79d);
-        .u-line {
-            padding-bottom: 0;
-        }
+        // display: flex;
+        // align-items: center;
         img {
+            .size(20px);
+            .mr(5px);
+            .fl;
+        }
+    }
+    .u-superstone{
+        .db;
+        .u-img,.u-list{
+            .y(top);
+            float:none;
+            .dbi;
+        }
+    }
+
+    .u-chant,.u-enchant {
+        .color(#7284ff);
+        .u-icon{
+            .size(20px);
+            .fl;
             .mr(5px);
         }
     }
-    .u-enchant {
-        .fz(12px);
-        .color(#d93);
-        .name {
-            .color(#c81);
-        }
-    }
+    
     .u-set {
-        .u-txt {
-            padding-top: 10px;
-        }
+        .mt(10px);
+        .u-setname{color:#aaa;}
         .setwquip {
-            .color(#3585de);
+            .color(rgb(255, 230, 4));
+        }
+        .setwquip2{
+            color:#01c79d
         }
     }
-    .u-level {
-        .name {
+
+    .u-desc{
+        &.useable{
+            color:#01c79d
+        }
+    }
+
+    .u-other{
+        .mt(10px);
+        .u-gs{
             .color(#f93);
         }
     }
+    
 }
 
 .w-player-equip-item-icon {
     display: flex;
     flex-direction: column;
     align-items: center;
-    i {
+    .u-icon {
         .pr;
         .r(4px);
         .clip;
         img {
             .db;
         }
-    }
-    .eq {
+
         &::after {
             content: "";
-            border: 2px solid #be5dbc;
+            border: 2px solid transparent;
             .r(4px);
             .lt(0, 0);
             .pa;
@@ -103,8 +120,28 @@
             box-sizing: border-box;
             .z(1);
         }
+
+        &.quality0::after{
+            border-color: rgb(167, 167, 167);
+        }
+        &.quality1::after{
+            border-color: rgb(60, 60, 60);
+        }
+        &.quality2::after{
+            border-color: rgb(0, 210, 75);
+        }
+        &.quality3::after{
+            border-color: rgb(0, 126, 255);
+        }
+        &.quality4::after{
+            border-color: #f39;
+        }
+        &.quality5::after{
+            border-color: rgb(255, 165, 0);
+        }
     }
-    span {
+
+    .u-name {
         .x;
         .db;
         .clip;
@@ -114,22 +151,24 @@
         word-wrap: normal;
         word-break: keep-all;
         text-overflow: ellipsis;
+        .bold;
     }
 }
 
-.showEquipName {
+.showPosition {
+    .size(480px, 680px);
+    .pr;
+    border: 1px solid @border-hr;
+    background-color: @bg-light;
+    .r(3px);
+
     display: flex;
     justify-content: space-between;
 
-    .size(480px, 680px);
-    .pr;
-    // background: url(../img/bg.png) center no-repeat;
-    // border: 1px solid #ddd;
-    .r(3px);
-    .u-img {
+    .w-player-equip-item {
         .pa;
-        .pointer;
     }
+
     .equip0 {
         .lt(120px, 580px);
     }

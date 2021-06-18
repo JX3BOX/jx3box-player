@@ -9,6 +9,7 @@
         </h1>
         <div class="w-player-meta">
         </div>
+        <div class="w-player-gs"><span class="u-label">装备分数</span> <b class="u-gs">{{gs || 0}}</b></div>
     </div>
 </template>
 
@@ -16,7 +17,7 @@
 import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
     name: "PlayerBasic",
-    props: ["data", "role"],
+    props: ["data", "role","gs"],
     components: {},
     data: function () {
         return {};

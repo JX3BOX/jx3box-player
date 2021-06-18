@@ -1,46 +1,46 @@
 <template>
-    <div class="w-player-equip" :class="showPosition">
-        <div class="w-player-equip-item-container" v-for="item in equips" :key="item.UcPos">
-            <el-popover :placement="item.UcPos | placement(equipUserImg)" trigger="hover">
+    <div class="w-player-equip" :class="{showPosition:showPosition}">
+        <div
+            class="w-player-equip-item"
+            :class="`equip${item.UcPos}`"
+            v-for="item in equips"
+            :key="item.UcPos"
+        >
+            <el-popover trigger="hover">
                 <div class="w-player-equip-item-detail">
                     <!-- 装备名|等级|门派 -->
-                    <div class="u-line u-name">
-                        <span class="name">{{ item.Name }}</span>
-                        <span>精炼：{{ item.StrengthLevel }}/{{ item.MaxStrengthLevel }}</span>
-                    </div>
-                    <!-- 装本基本属性 -->
-                    <div class="u-line">
+                    <div class="u-line u-title">
                         <span
-                            v-if="item.UcPos == '0'"
+                            class="u-name"
+                            :style="{color:showFontColor(item.Color)}"
+                        >{{ item.Name }}</span>
+                        <span class="u-star">
+                            <span v-for="i in ~~item.StrengthLevel" :key="i">★</span>
+                        </span>
+                        <span
+                            class="u-strength"
+                        >精炼：{{ item.StrengthLevel }}/{{ item.MaxStrengthLevel }}</span>
+                    </div>
+                    <!-- 装本基本属性外防内防 -->
+                    <div class="u-line u-base">
+                        <span
+                            v-if="!item.UcPos"
                         >{{ item.Base1Type.Attrib.GeneratedBase }}~ {{ item.Base1Type.Base1Max | BaseMax(item.Base2Type.Base2Max) }}</span>
-                        <span v-if="item.UcPos !== '0'">{{ item.Base1Type.Attrib.GeneratedBase }}</span>
+                        <span v-if="item.UcPos">{{ item.Base1Type.Attrib.GeneratedBase }}</span>
                         <span>{{ item.Base2Type.Attrib.GeneratedBase }}</span>
                         <span>{{ item.Base3Type.Attrib.GeneratedBase }}</span>
                     </div>
+                    <!-- 主属性根骨等 -->
                     <div class="u-line u-info">
                         <span v-for="c in item.ModifyType" :key="c.Desc">
                             <span v-if="c.Attrib.GeneratedMagic">
                                 {{ c.Attrib.GeneratedMagic }}
                                 <b
                                     v-if="item.StrengthLevel > 0"
-                                >( + {{ c.Param1Max | refine(item.StrengthLevel) }})</b>
+                                >(+{{ c.Param1Max | refine(item.StrengthLevel) }})</b>
                             </span>
-                            <span class="desc" v-else>{{ c.Attrib.Desc }}</span>
+                            <!-- <span class="desc" v-else>{{ c.Attrib.Desc }}</span> -->
                         </span>
-                    </div>
-                    <div class="u-line" v-if="item.Desc !== '' && item.UcPos == '9'">{{ item.Desc }}</div>
-                    <!-- 装备锻造附魔 -->
-                    <div class="u-line u-chant" v-if="item.WPermanentEnchant">
-                        <!-- <span>{{ item.WPermanentEnchant.Name }}</span> -->
-                        <span
-                            v-for="c in item.WPermanentEnchant.Attributes"
-                            :key="c.Desc"
-                        >{{ c.Attrib.GeneratedMagic }}</span>
-                    </div>
-                    <!-- 装备大附魔 -->
-                    <div class="u-line u-enchant" v-if="item.WTemporaryEnchant">
-                        <span class="name">{{ item.WTemporaryEnchant.Name }}</span>
-                        <span>{{ item.WTemporaryEnchant.ID | enchant }}</span>
                     </div>
                     <!-- 石头镶嵌 -->
                     <div class="u-line u-stone" v-if="item.FiveStone">
@@ -52,18 +52,49 @@
                         </span>
                     </div>
                     <!-- 五彩石 -->
-                    <div class="u-color" v-if="item.ColorStone">
-                        <img :src="item.ColorStone.Icon.FileName" alt />
-                        <div class="u-line">
-                            <!-- <span class="name">{{ item.ColorStone.Name }}</span> -->
-                            <span
+                    <div class="u-line u-stone u-superstone" v-if="item.ColorStone">
+                        <img class="u-img" :src="item.ColorStone.Icon.FileName" />
+                        <!-- <span class="name">{{ item.ColorStone.Name }}</span> -->
+                        <div class="u-list">
+                            <div
                                 v-for="c in item.ColorStone.Attributes"
                                 :key="c.Desc"
-                            >{{ c.Attrib.GeneratedMagic }}</span>
+                            >{{ c.Attrib.GeneratedMagic }}</div>
                         </div>
                     </div>
-                    <!-- 套装介绍 -->
+                    <!-- 等级+耐久度 -->
+                    <div class="u-line u-misc">
+                        <span>需要等级{{ item.Level }}</span>
+                        <span
+                            v-if="~~item.MaxDurability"
+                        >耐久度：{{ item.WDurability }}/{{item.MaxDurability}}</span>
+                    </div>
+                    <!-- 小附魔 -->
+                    <div class="u-line u-chant" v-if="item.WPermanentEnchant">
+                        <!-- <span>{{ item.WPermanentEnchant.Name }}</span> -->
+                        <span v-for="c in item.WPermanentEnchant.Attributes" :key="c.Desc">
+                            <img class="u-icon" :src="3012 | iconLink" />
+                            {{ c.Attrib.GeneratedMagic }}
+                        </span>
+                    </div>
+                    <!-- 大附魔 -->
+                    <div class="u-line u-enchant" v-if="item.WTemporaryEnchant">
+                        <!-- <span class="name">{{ item.WTemporaryEnchant.Name }}</span> -->
+                        <span>
+                            <img class="u-icon" :src="2991 | iconLink" />
+                            {{ item.WTemporaryEnchant.ID | enchant }}
+                        </span>
+                    </div>
+                    <!-- 套装效果 -->
                     <div class="u-line u-set" v-if="item.Set">
+                        <span class="u-txt">已装备：</span>
+                        <span
+                            v-for="(c, i) in item.SetList"
+                            :key="i"
+                            class="u-setname"
+                            :class="c | setwquip(setlist)"
+                        >{{ c }}</span>
+
                         <span
                             v-for="c in item.Set"
                             :key="c.Desc"
@@ -71,41 +102,42 @@
                         >
                             <span>[{{ c.SetNum }}] {{ c.Attrib.Desc || c.Attrib.GeneratedMagic }}</span>
                         </span>
-
-                        <span class="u-txt">已装备：</span>
-                        <span
-                            v-for="(c, i) in item.SetList"
-                            :key="i"
-                            :class="c | setwquip(setlist)"
-                        >{{ c }}</span>
                     </div>
-                    <div class="u-line" v-if="item.Desc !== ''">{{ item.Desc }}</div>
-                    <!-- 装备品级 -->
-                    <div class="u-line u-level">
-                        <span class="name">品级:{{ item.Quality }}</span>
-                        <span>需要等级{{ item.Level }}级</span>
+
+                    <!-- 使用效果 -->
+                    <div
+                        class="u-line u-desc"
+                        v-if="item.Desc"
+                        :class="{useable:item.UcPos}"
+                    >{{ item.Desc | filterText }}</div>
+
+                    <!-- 其它 -->
+                    <div class="u-line u-other">
+                        <span class="u-gs">品质等级{{ item.Quality }}</span>
                         <span>适用门派：{{ item.BelongForce }}</span>
                     </div>
                 </div>
-                <div
-                    class="w-player-equip-item-icon"
-                    slot="reference"
-                    :class="`equip${item.UcPos}`"
-                >
-                    <i>
+                <div class="w-player-equip-item-icon" slot="reference">
+                    <i class="u-icon" :class="'quality' + item.Color">
                         <img class="u-img" :src="item.Icon.FileName" :alt="item.Name" />
                     </i>
-                    <span class="u-name" v-if="showEquipName">{{ item.Name }}</span>
+                    <span
+                        class="u-name"
+                        v-if="showEquipName"
+                        :style="{color:showFontColor(item.Color)}"
+                    >{{ item.Name }}</span>
                 </div>
             </el-popover>
         </div>
     </div>
 </template>
 <script>
+import colormap from "@/assets/data/color.json";
 import enchant from "@jx3box/jx3box-data/data/bps/enchant.json";
+import { iconLink } from "@jx3box/jx3box-common/js/utils";
 export default {
     name: "Equip",
-    props: ["data", "showEquipName","showPosition"],
+    props: ["data", "showEquipName", "showPosition"],
     data: function () {
         return {
             setlist: [],
@@ -117,6 +149,15 @@ export default {
         },
     },
     filters: {
+        iconLink,
+        filterText: function (str) {
+            if (str) {
+                str = str.replace(/\\/g, "");
+                str = str.replace(/n/g, "");
+                return str;
+            }
+            return "";
+        },
         setwquip: function (id, setlist) {
             for (let i = 0; i < setlist.length; i++) {
                 if (id == setlist[i]) {
@@ -127,19 +168,6 @@ export default {
         },
         enchant: function (id) {
             return enchant[id];
-        },
-        placement: function (val, style) {
-            if (style !== "") {
-                if (val == "0" || val == "1" || val == "2") {
-                    return "top";
-                } else if (val == "8" || val == "4" || val == "3") {
-                    return "right";
-                } else {
-                    return "left";
-                }
-            } else {
-                return "top-start";
-            }
         },
         BaseMax: function (val1, val2) {
             return ~~val1 + ~~val2;
@@ -184,16 +212,11 @@ export default {
                     return val * 1.55;
             }
         },
-
-        quality: function (val) {
-            if (val > "5000") {
-                return "eq";
-            } else {
-                return "";
-            }
-        },
     },
     methods: {
+        showFontColor: function (val) {
+            return colormap[val];
+        },
         getsetlist: function () {
             let list = [];
             for (let i = 0; i < this.data.length; i++) {
@@ -212,15 +235,12 @@ export default {
                 }
             }
             if (num >= nums) {
-                return "setwquip";
+                return "setwquip2";
             }
             return "";
         },
     },
     created: function () {
-        if (this.styleImg) {
-            this.equipUserImg = "equipUserImg";
-        }
         this.getsetlist();
     },
 };

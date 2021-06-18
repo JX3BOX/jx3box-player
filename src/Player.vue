@@ -2,7 +2,7 @@
     <div class="w-player" v-loading="loading">
         <div class="w-player-box" v-if="data">
             <!-- 基本信息 -->
-            <Basic :data="data" :role="role" />
+            <Basic :data="data" :role="role" :gs="gs"/>
 
             <!-- 装备信息 -->
             <div class="w-player-primary">
