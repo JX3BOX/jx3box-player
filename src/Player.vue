@@ -7,7 +7,7 @@
             <!-- 装备信息 -->
             <div class="w-player-primary">
                 <!-- 装备预览 -->
-                <Equip :data="equip_data" :showEquipName="true" :showPosition="true"/>
+                <Equip :data="equip_data" :showEquipName="true" :showPosition="true" :mount="mount_id" :body="body_id"/>
 
                 <!-- 面板数据 -->
                 <Overview :data="data" />
@@ -52,6 +52,16 @@ export default {
         talent_data: function () {
             return this.data && this.data;
         },
+        gs : function (){
+            // TODO:苦瓜写一下装分计算方案
+            return 0
+        },
+        mount_id: function () {
+            return this.data && this.data.Kungfu && this.data.Kungfu.KungfuID;
+        },
+        body_id : function (){
+            return this.data && this.data.Person && this.data.Person.body;
+        }
     },
     methods: {
         loadData: function () {

@@ -1,5 +1,8 @@
 <template>
     <div class="w-player-equip" :class="{showPosition:showPosition}">
+        <i class="w-player-body">
+            <img :src="showBodyPic(mount,body)">
+        </i>
         <div
             class="w-player-equip-item"
             :class="`equip${item.UcPos}`"
@@ -132,12 +135,13 @@
     </div>
 </template>
 <script>
+import {__imgPath} from "@jx3box/jx3box-common/data/jx3box.json";
 import colormap from "@/assets/data/color.json";
 import enchant from "@jx3box/jx3box-data/data/bps/enchant.json";
 import { iconLink } from "@jx3box/jx3box-common/js/utils";
 export default {
     name: "Equip",
-    props: ["data", "showEquipName", "showPosition"],
+    props: ["data", "showEquipName", "showPosition","mount","body"],
     data: function () {
         return {
             setlist: [],
@@ -214,6 +218,10 @@ export default {
         },
     },
     methods: {
+        showBodyPic : function (mount,body){
+            return __imgPath + 'image/body/' + 4 + '_' + body + '.png'
+            // return __imgPath + 'image/body/' + mount + '_' + body + '.png'
+        },
         showFontColor: function (val) {
             return colormap[val];
         },

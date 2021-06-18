@@ -1,6 +1,6 @@
 <template>
     <div class="w-player-overview">
-        <h2 class="u-title">角色属性</h2>
+        <h2 class="u-title"><i class="el-icon-info"></i> 角色属性</h2>
         <div class="u-item" v-for="(item,i) in result" :key="i">
             <span class="u-key">{{ item.key | showAttrName }}</span>
             <span class="u-val">{{ item.val }}</span>
