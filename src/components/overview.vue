@@ -1,13 +1,23 @@
 <template>
   <div class="m-user-panel">
-    <div class="m-line" v-for="(item, key) in datas" :key="key">
-      <span>{{ key | infoname }}</span>
-      <span>{{ item }}</span>
+    <div v-for="(item, key) in datas" :key="key">
+      <div v-if="key == 'Attrib'">
+        <span class="m-line" v-for="(c, i) in item" :key="i">
+          <span>{{ i | infoname }}</span> <span>{{ c }}</span>
+        </span>
+      </div>
+      <div class="m-line" v-else>
+        <span>{{ key | infoname }}</span>
+        <span v-if="key == 'KungfuID' || key == 'Name'">{{ item | rolename }}</span>
+        <span v-else>{{ item }}</span>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import info from '@/assets/data/attr.json'
+import role from '@/assets/data/role.json'
+
 export default {
   name: 'Panel',
   props: ['data'],
@@ -20,8 +30,17 @@ export default {
   methods: {},
   filters: {
     infoname: function(id) {
+      if (id == 'Name') {
+        return '门派'
+      }
       if (info[id]) {
         return info[id]
+      }
+      return id
+    },
+    rolename: function(id) {
+      if (role[id]) {
+        return role[id]
       }
       return id
     },
@@ -33,7 +52,7 @@ export default {
       delete this.data.qixueList
       delete this.data.qiXueId
     }
-    console.log(this.datas)
+    // console.log(this.datas)
     // console.log(this.data,'panel')
   },
 }
