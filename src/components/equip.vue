@@ -3,11 +3,13 @@
         <i class="w-player-body" v-if="showPosition">
             <img :src="showBodyPic(mount, body)" />
         </i>
-        <div
+        <a
             class="w-player-equip-item"
             :class="`equip${item.UcPos}`"
             v-for="item in equips"
             :key="item.UcPos"
+            :href="getEquipLink(item)"
+            target="_blank"
         >
             <el-popover trigger="hover" :placement="item.UcPos | placement(showPosition)">
                 <div class="w-player-equip-item-detail">
@@ -132,14 +134,14 @@
                     >{{ item.Name }}</span>
                 </div>
             </el-popover>
-        </div>
+        </a>
     </div>
 </template>
 <script>
 import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
 import colormap from "@/assets/data/color.json";
 import enchant from "@jx3box/jx3box-data/data/bps/enchant.json";
-import { iconLink } from "@jx3box/jx3box-common/js/utils";
+import { iconLink,getLink } from "@jx3box/jx3box-common/js/utils";
 import formula from '@/service/gs.js'
 export default {
     name: "Equip",
@@ -262,6 +264,10 @@ export default {
             return "";
         },
         formula,
+        getEquipLink : function (item){
+            let item_id = item.TabType + '_' + item.ID
+            return getLink('item',item_id)
+        }
     },
     created: function () {
         this.getSetList();
