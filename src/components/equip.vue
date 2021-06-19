@@ -141,8 +141,8 @@
 import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
 import colormap from "@/assets/data/color.json";
 import enchant from "@jx3box/jx3box-data/data/bps/enchant.json";
-import { iconLink,getLink } from "@jx3box/jx3box-common/js/utils";
-import formula from '@/service/gs.js'
+import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
+import { getEquipOriginScore } from "@/service/gs.js";
 export default {
     name: "Equip",
     props: ["data", "showEquipName", "showPosition", "mount", "body"],
@@ -263,11 +263,11 @@ export default {
             }
             return "";
         },
-        formula,
-        getEquipLink : function (item){
-            let item_id = item.TabType + '_' + item.ID
-            return getLink('item',item_id)
-        }
+        formula: getEquipOriginScore,
+        getEquipLink: function (item) {
+            let item_id = item.TabType + "_" + item.ID;
+            return getLink("item", item_id);
+        },
     },
     created: function () {
         this.getSetList();

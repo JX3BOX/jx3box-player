@@ -33,6 +33,7 @@ import Equip from "./components/equip.vue";
 import Attrs from "./components/attrs.vue";
 import Talent from "./components/talent.vue";
 import rolename from "@/assets/data/role.json";
+import { getGS } from "@/service/gs.js";
 export default {
     name: "Player",
     props: ["playerId", "server", "role"],
@@ -60,8 +61,7 @@ export default {
             return this.data && this.data;
         },
         gs: function () {
-            // TODO:苦瓜写一下装分计算方案
-            return 0;
+            return getGS(this.equip_data);
         },
         mount_id: function () {
             const name = this.roleName(this.roleName(this.data.Kungfu.Name));
