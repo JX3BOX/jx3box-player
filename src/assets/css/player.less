@@ -1,11 +1,23 @@
 .w-player{
     color:@color;
-}
-.w-player-box {
-    max-width: 1080px;
+    max-width: 940px;
     margin: 0 auto;
+    padding:20px;
+    .r(4px);
+}
+.w-player.darkMode {
+    color:#999;
 }
 
 .w-player-primary{
-    display: flex;
+    
+    &.isFlex{
+        display: flex;
+    }
+}
+
+
+.w-player.darkMode{
+    background-color:#212121;
+
 }

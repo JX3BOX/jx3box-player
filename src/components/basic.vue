@@ -9,7 +9,11 @@
         </h1>
         <div class="w-player-meta">
         </div>
-        <div class="w-player-gs"><span class="u-label">装备分数</span> <b class="u-gs">{{gs || 0}}</b></div>
+        <div class="w-player-gs">
+            <i class="u-icon"><img src="../assets/img/gs.png"></i>
+            <!-- <span class="u-label">装备分数</span>  -->
+            <b class="u-gs">{{gs || 0}}</b>
+        </div>
     </div>
 </template>
 

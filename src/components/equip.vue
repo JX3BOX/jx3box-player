@@ -1,14 +1,17 @@
 <template>
     <div class="w-player-equip" :class="{ showPosition: showPosition }">
+        <h2 class="w-player-equip-title" v-if="!showPosition">
+            <i class="el-icon-user-solid"></i> 角色装备
+        </h2>
         <i class="w-player-body" v-if="showPosition">
             <img :src="showBodyPic(mount, body)" />
         </i>
         <a
             class="w-player-equip-item"
-            :class="`equip${item.UcPos}`"
-            v-for="item in equips"
-            :key="item.UcPos"
+            v-for="(item,i) in equips"
+            :key="i"
             :href="getEquipLink(item)"
+            :class="`equip${item.UcPos}`"
             target="_blank"
         >
             <el-popover trigger="hover" :placement="item.UcPos | placement(showPosition)">
@@ -153,7 +156,44 @@ export default {
     },
     computed: {
         equips: function () {
-            return this.data;
+            if (!this.data) {
+                return [];
+            }
+
+            // 重新排序
+            let order = {
+                "4":0, //帽子
+                "3":1, //衣服
+                "8":2, //腰带
+                "12":3, //护腕
+                "10":4, //裤子
+                "11":5, //鞋子
+                "5":6, //项链
+                "9":7, //腰坠
+                "6":8, //戒指
+                "7":9, //戒指
+                "0":10,
+                "1":11,
+                "2":12, //武器、暗器
+            };
+
+            let equips = [];
+            this.data.forEach((item, i) => {
+                if (item) {
+                    let new_index = order[~~item.UcPos];
+                    equips[new_index] = item;
+                }
+            });
+
+            // 移除空项
+            let _equips = []
+            equips.forEach((item) => {
+                if(item){
+                    _equips.push(item)
+                }
+            })
+
+            return _equips;
         },
     },
     filters: {

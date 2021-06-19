@@ -4,12 +4,20 @@
         .bold;
         border-bottom: 2px solid @border-hr;
     }
-    .u-link{
+    .u-icon{
+        .size(20px);
+        .y(-4px);
+        fill:@color;
+    }
+    .u-link {
         .fr;
         .fz(12px);
         font-weight: normal;
-        color:@color-link;
-        .underline(@color-link);
+        color: @color-link;
+        &:hover{
+            color:@pink;
+        }
+        // .underline(@color-link);
     }
     .u-talent {
         display: flex;
@@ -17,7 +25,7 @@
     }
 
     .u-talent-item {
-        .mr(10px);
+        .mr(15px);
         .x;
         .fz(13px, 1.8);
         .color(#2e4946);
@@ -44,6 +52,14 @@
             .z(1);
         }
     }
+    .u-talent-name {
+        .fz(14px, 2);
+        .db;
+        .size(48px,28px);
+        overflow: hidden;
+        color:#18978d;
+        .bold;
+    }
 }
 .w-player-talent-pop {
     .u-talent-pop {
@@ -60,5 +76,26 @@
     }
     .u-talent-desc {
         .fz(12px, 2);
+    }
+}
+
+.darkMode {
+    .w-player-talent {
+        .u-talent-name {
+            color: #72efe5;
+        }
+        .u-title {
+            border-color: #555;
+        }
+        .u-link {
+            color: #aaa;
+            .underline(#aaa);
+        }
+
+        .u-talent-icon {
+            &::after {
+                border-color: #8be6df;
+            }
+        }
     }
 }

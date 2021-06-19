@@ -1,22 +1,23 @@
 <template>
-    <div class="w-player" v-loading="loading">
+    <div class="w-player" v-loading="loading" :class="{'darkMode':darkMode}">
         <div class="w-player-box" v-if="data">
             <!-- 基本信息 -->
             <Basic :data="data" :role="role" :gs="gs" />
 
             <!-- 装备信息 -->
-            <div class="w-player-primary">
+            <div class="w-player-primary" :class="{isFlex : showPosition}">
+                <!-- 面板数据 -->
+                <Attrs :data="data" />
+
                 <!-- 装备预览 -->
                 <Equip
                     :data="equip_data"
-                    :showEquipName="true"
-                    :showPosition="true"
+                    :showEquipName="showEquipName"
+                    :showPosition="showPosition"
                     :mount="mount_id"
                     :body="body_id"
                 />
 
-                <!-- 面板数据 -->
-                <Attrs :data="data" />
             </div>
 
             <!-- 其它信息 -->
@@ -36,7 +37,7 @@ import rolename from "@/assets/data/role.json";
 import { getGS } from "@/service/gs.js";
 export default {
     name: "Player",
-    props: ["playerId", "server", "role"],
+    props: ["playerId", "server", "role",'darkMode',"showPosition","showEquipName"],
     data: function () {
         return {
             data: "",

@@ -1,11 +1,20 @@
 <template>
     <div class="w-player-talent">
         <h2 class="u-title">
-            <i class="el-icon-discount"></i> 角色奇穴
-            <a href="/app/talent/" class="u-link" target="_blank"><i class="el-icon-link"></i> 前往奇穴模拟器</a>
+            <img class="u-icon" svg-inline src="../assets/img/talent.svg" /> 角色奇穴
+            <a href="/app/talent/" class="u-link" target="_blank">
+                奇穴模拟器
+                <i class="el-icon-arrow-right"></i>
+            </a>
         </h2>
         <div class="u-talent" v-if="list.length > 0">
-            <div class="u-talent-item" v-for="item in this.list" :key="item.skill_id">
+            <a
+                class="u-talent-item"
+                v-for="item in this.list"
+                :key="item.skill_id"
+                :href="getTalentLink(item)"
+                target="_blank"
+            >
                 <el-popover placement="top" trigger="hover" popper-class="w-player-talent-pop">
                     <div class="u-talent-pop">
                         <span class="u-talent-title">{{ item.name }}</span>
@@ -18,13 +27,14 @@
                         <span class="u-talent-name">{{ item.name }}</span>
                     </div>
                 </el-popover>
-            </div>
+            </a>
         </div>
         <div class="u-null" v-else>暂无奇穴信息</div>
     </div>
 </template>
 
 <script>
+import { getLink } from "@jx3box/jx3box-common/js/utils";
 export default {
     name: "PlayerTalent",
     props: ["data"],
@@ -35,7 +45,11 @@ export default {
         };
     },
     computed: {},
-    methods: {},
+    methods: {
+        getTalentLink: function (item) {
+            return getLink("skill", item.skill_id, item.level);
+        },
+    },
     filters: {},
     created: function () {},
     mounted: function () {

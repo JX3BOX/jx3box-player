@@ -1,19 +1,27 @@
 .w-player-equip {
-    display: flex;
-    flex-wrap: wrap;
+    .clearfix;
     .w-player-body {
         .none;
     }
 }
 .showPosition {
+    display: flex;
+    flex-wrap: wrap;
     .w-player-body {
         .db;
     }
+}
+.w-player-equip-title {
+    .fz(18px, 2);
+    .bold;
+    border-bottom: 2px solid @border-hr;
 }
 
 .w-player-equip-item {
     cursor: pointer;
     .db;
+    .mr(15px);
+    .fl;
 }
 .w-player-body {
     .pr;
@@ -54,7 +62,7 @@
 
     .u-info {
         b {
-            color: #93f;
+            color: #f39;
         }
         .color(#01c79d);
         .desc {
@@ -155,7 +163,7 @@
             border-color: rgb(0, 126, 255);
         }
         &.quality4::after {
-            border-color: #f39;
+            border-color: #93f;
         }
         &.quality5::after {
             border-color: rgb(255, 165, 0);
@@ -167,12 +175,10 @@
         .db;
         .clip;
         .fz(13px, 1.8);
-        width: 68px;
-        white-space: nowrap;
-        word-wrap: normal;
-        word-break: keep-all;
-        text-overflow: ellipsis;
+        width: 48px;
+        .h(20px);
         .bold;
+        overflow: hidden;
     }
 }
 
@@ -229,4 +235,9 @@
     .equip12 {
         .lt(400px, 50px);
     }
+}
+
+.darkMode .showPosition {
+    background-color: #191919;
+    border-color: #555;
 }

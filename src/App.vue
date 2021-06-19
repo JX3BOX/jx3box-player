@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Player :playerId="playerId" :server="server" :role="role"/>
+        <Player :playerId="playerId" :server="server" :role="role" :darkMode="false" :showEquipName="true" :showPosition="false"/>
     </div>
 </template>
 
