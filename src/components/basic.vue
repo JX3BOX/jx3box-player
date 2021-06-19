@@ -1,30 +1,46 @@
 <template>
     <div class="w-player-basic">
-        <!-- 角色基本情况：心法、装分、等级等 -->
-
-        <!-- 添加心法被动 -->
-        <slot></slot>
+        <h1 class="w-player-title">
+            <i class="w-player-mount">
+                <img :src="mount_id | showMountIcon"/>
+            </i>
+            <span class="w-player-role">{{role || '匿名'}}</span>
+            <span class="w-player-level">( {{level}}级 )</span>
+        </h1>
+        <div class="w-player-meta">
+        </div>
+        <div class="w-player-gs"><span class="u-label">装备分数</span> <b class="u-gs">{{gs || 0}}</b></div>
     </div>
 </template>
 
 <script>
+import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
 export default {
-   name : 'PlayerBasic',
-   props:[],
-   components : {},
-   data : function(){
-       return {
-           
-       }
-   },
-   computed:{},
-   methods:{},
-   filters:{},
-   created:function(){},
-   mounted:function(){},
-}
+    name: "PlayerBasic",
+    props: ["data", "role","gs"],
+    components: {},
+    data: function () {
+        return {};
+    },
+    computed: {
+        mount_id: function () {
+            return this.data && this.data.Kungfu.KungfuID;
+        },
+        level : function (){
+            return this.data && this.data.Person.level
+        }
+    },
+    methods: {},
+    filters: {
+        showMountIcon: function (val) {
+            return __imgPath + "image/xf/" + val + ".png";
+        },
+    },
+    created: function () {},
+    mounted: function () {},
+};
 </script>
 
 <style scoped lang="less">
-    @import '../assets/css/basic.less';
+@import "../assets/css/basic.less";
 </style>

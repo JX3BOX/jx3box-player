@@ -1,1 +1,56 @@
-.w-player-talent{}
+.w-player-talent {
+  .u-title {
+    .fz(18px, 2);
+    .bold;
+    border-bottom: 2px solid @border-hr;
+  }
+  .m-talent {
+    display: flex;
+    padding-top: 10px;
+    .m-box {
+      .u-box {
+        .x;
+        .mr(20px);
+        .fz(13px, 1.8);
+        .color(#2e4946);
+      }
+      .u-img {
+        .db;
+
+        .pr;
+        .r(4px);
+        .clip;
+        cursor: pointer;
+        background-color: #2e4946;
+        img {
+          .db;
+        }
+        &::after {
+          content: '';
+          border: 3px solid #18978d;
+          .r(4px);
+          .lt(0, 0);
+          .pa;
+          .full;
+          box-sizing: border-box;
+          .z(1);
+        }
+      }
+    }
+  }
+}
+.el-popover {
+  .u-txt {
+    padding: 0 10px;
+    span {
+      max-width: 240px;
+      .db;
+      .fz(13px);
+      &.name {
+        .color(#f39);
+        .fz(16px);
+        .mb(5px);
+      }
+    }
+  }
+}

@@ -2,15 +2,15 @@
   <div class="w-player" v-loading="loading">
     <div class="w-player-box" v-if="data">
       <!-- 基本信息 -->
-      <Basic :data="data" />
+      <Basic :data="data" :role="role" :gs="gs" />
 
       <!-- 装备信息 -->
       <div class="w-player-primary">
         <!-- 装备预览 -->
-        <Equip :data="equip_data" :styleImg="true" />
+        <Equip :data="equip_data" :showEquipName="true" :showPosition="true" :mount="mount_id" :body="body_id" />
 
         <!-- 面板数据 -->
-        <Overview :data="overview_data" />
+        <Overview :data="data" />
       </div>
 
       <!-- 其它信息 -->
@@ -26,15 +26,16 @@ import Basic from './components/basic.vue'
 import Equip from './components/equip.vue'
 import Overview from './components/overview.vue'
 import Talent from './components/talent.vue'
-import role from '@/assets/data/role.json'
+import rolename from '@/assets/data/role.json'
 export default {
   name: 'Player',
-  props: ['playerId', 'server'],
+  props: ['playerId', 'server', 'role'],
   components: {},
   data: function() {
     return {
       data: '',
       loading: false,
+      rolename,
     }
   },
   computed: {
@@ -50,20 +51,29 @@ export default {
     equip_data: function() {
       return (this.data && this.data['Equips']) || ''
     },
-    overview_data: function() {
-      let list = this.data['Kungfu']
-      list = this.sortObj(list)
-      for (const i in list) {
-        delete list.Level
-      }
-      let data = { ...list, ...this.data['Person'] }
-      return data
-    },
     talent_data: function() {
-      return this.data['Person'] || ''
+      return this.data && this.data
+    },
+    gs: function() {
+      // TODO:苦瓜写一下装分计算方案
+      return 0
+    },
+    mount_id: function() {
+      const name = this.roleName(this.roleName(this.data.Kungfu.Name))
+      return this.data && this.data.Kungfu && name
+    },
+    body_id: function() {
+      return this.data && this.data.Person && this.data.Person.body
     },
   },
   methods: {
+    roleName: function(val) {
+      for (const key in this.rolename) {
+        if (key == val) {
+          return this.rolename[key]
+        }
+      }
+    },
     loadData: function() {
       this.loading = true
       $node()
@@ -79,19 +89,6 @@ export default {
         .finally(() => {
           this.loading = false
         })
-    },
-    sortObj(obj) {
-      var arr = []
-      for (var i in obj) {
-        arr.push([obj[i], i])
-      }
-      arr.reverse()
-      var len = arr.length
-      var obj = {}
-      for (var i = 0; i < len; i++) {
-        obj[arr[i][1]] = arr[i][0]
-      }
-      return obj
     },
   },
   watch: {

@@ -1,70 +1,44 @@
 <template>
-  <div class="m-user-panel">
-    <div v-for="(item, key) in datas" :key="key">
-      <div v-if="key == 'Attrib'">
-        <span class="m-line" v-for="(c, i) in item" :key="i">
-          <span>{{ i | infoname }}</span> <span>{{ c }}</span>
-        </span>
-      </div>
-      <div class="m-line" v-else>
-        <span>{{ key | infoname }}</span>
-        <span v-if="key == 'KungfuID' || key == 'Name'">{{ item | rolename }}</span>
-        <span v-else>{{ item }}</span>
-      </div>
+    <div class="w-player-overview">
+        <h2 class="u-title"><i class="el-icon-info"></i> 角色属性</h2>
+        <div class="u-item" v-for="(item,i) in result" :key="i">
+            <span class="u-key">{{ item.key | showAttrName }}</span>
+            <span class="u-val">{{ item.val }}</span>
+        </div>
     </div>
-  </div>
 </template>
 <script>
-import info from '@/assets/data/attr.json'
-import role from '@/assets/data/role.json'
-
+import attrMap from "@/assets/data/attr.json";
 export default {
-  name: 'Panel',
-  props: ['data'],
-  data: function() {
-    return {
-      qixue: [],
-    }
-  },
-  computed: {},
-  methods: {},
-  filters: {
-    infoname: function(id) {
-      if (id == 'Name') {
-        return '门派'
-      }
-      if (info[id]) {
-        return info[id]
-      }
-      return id
+    name: "Overview",
+    props: ["data"],
+    data: function () {
+        return {};
     },
-    rolename: function(id) {
-      if (role[id]) {
-        return role[id]
-      }
-      return id
+    computed: {
+        result: function () {
+            // TODO:根据计算方案对data原始数据进行加工
+            return [
+                {
+                    key: "atMagicCriticalStrike",
+                    val: "16.11%",
+                },
+            ];
+        },
     },
-  },
-  created: function() {
-    this.qixue = this.data.qiXueId
-    this.datas = this.data
-    for (const i in this.datas) {
-      delete this.data.qixueList
-      delete this.data.qiXueId
-    }
-    // console.log(this.datas)
-    // console.log(this.data,'panel')
-  },
-}
+    methods: {},
+    filters: {
+        showAttrName: function (key) {
+            if (attrMap[key]) {
+                return attrMap[key];
+            }
+            return "";
+        },
+    },
+    created: function () {},
+};
 </script>
 
 <style scoped lang="less">
-.m-user-panel {
-  padding: 10px;
-  .m-line {
-    display: flex;
-    justify-content: space-between;
-    .mb(10px);
-  }
-}
+@import "../assets/css/overview.less";
 </style>
