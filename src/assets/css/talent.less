@@ -1,56 +1,57 @@
 .w-player-talent {
-  .u-title {
-    .fz(18px, 2);
-    .bold;
-    border-bottom: 2px solid @border-hr;
-  }
-  .m-talent {
-    display: flex;
-    padding-top: 10px;
-    .m-box {
-      .u-box {
+    .u-title {
+        .fz(18px, 2);
+        .bold;
+        border-bottom: 2px solid @border-hr;
+    }
+    .u-talent {
+        display: flex;
+        padding-top: 10px;
+    }
+
+    .u-talent-item {
+        .mr(10px);
         .x;
-        .mr(20px);
         .fz(13px, 1.8);
         .color(#2e4946);
-      }
-      .u-img {
+    }
+    .u-talent-icon {
         .db;
-
         .pr;
         .r(4px);
         .clip;
         cursor: pointer;
         background-color: #2e4946;
+        .w(48px);
         img {
-          .db;
+            .db;
         }
         &::after {
-          content: '';
-          border: 3px solid #18978d;
-          .r(4px);
-          .lt(0, 0);
-          .pa;
-          .full;
-          box-sizing: border-box;
-          .z(1);
+            content: "";
+            border: 3px solid #18978d;
+            .r(4px);
+            .lt(0, 0);
+            .pa;
+            .full;
+            box-sizing: border-box;
+            .z(1);
         }
-      }
     }
-  }
 }
-.el-popover {
-  .u-txt {
-    padding: 0 10px;
-    span {
-      max-width: 240px;
-      .db;
-      .fz(13px);
-      &.name {
-        .color(#f39);
-        .fz(16px);
-        .mb(5px);
-      }
+.w-player-talent-pop {
+    .u-talent-pop {
+        padding: 0 10px;
+        max-width: 320px;
+        .db;
+        .fz(13px);
     }
-  }
+    .u-talent-title {
+        .color(#18978d);
+        .fz(14px, 2);
+        .db;
+        .bold;
+    }
+    .u-talent-desc {
+        .fz(12px, 2);
+    }
 }
