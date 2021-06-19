@@ -16,7 +16,7 @@
                 />
 
                 <!-- 面板数据 -->
-                <Overview :data="data" />
+                <Attrs :data="data" />
             </div>
 
             <!-- 其它信息 -->
@@ -30,13 +30,12 @@ import serverzones from "@jx3box/jx3box-data/data/server/server_zone.json";
 import { $node } from "@jx3box/jx3box-common/js/https";
 import Basic from "./components/basic.vue";
 import Equip from "./components/equip.vue";
-import Overview from "./components/overview.vue";
+import Attrs from "./components/attrs.vue";
 import Talent from "./components/talent.vue";
 import rolename from "@/assets/data/role.json";
 export default {
     name: "Player",
     props: ["playerId", "server", "role"],
-    components: {},
     data: function () {
         return {
             data: "",
@@ -113,7 +112,7 @@ export default {
     components: {
         Basic,
         Equip,
-        Overview,
+        Attrs,
         Talent,
     },
 };

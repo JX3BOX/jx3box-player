@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <Player :playerId="playerId" :server="server" />
+        <Player :playerId="playerId" :server="server" :role="role"/>
     </div>
 </template>
 
@@ -11,11 +11,13 @@ export default {
     props: [],
     data: function () {
         return {
+            role : "浮烟@长安城",
+
             // playerId: '31864485', //筱儿
-            // playerId: "26522940",  //浮烟七秀
+            playerId: "26522940",  //浮烟七秀
             // playerId: "33065480",  //和尚
             // playerId: "33065534",  //霸刀
-            playerId: "33146204",  //藏剑
+            // playerId: "33146204",  //藏剑
             // playerId: "33154610",  //醉栩蓬莱
             server: '蝶恋花',
 

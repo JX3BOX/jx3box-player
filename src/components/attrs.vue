@@ -1,5 +1,5 @@
 <template>
-    <div class="w-player-overview">
+    <div class="w-player-attrs">
         <h2 class="u-title"><i class="el-icon-info"></i> 角色属性</h2>
         <div class="u-item" v-for="(item,i) in result" :key="i">
             <span class="u-key">{{ item.key | showAttrName }}</span>
@@ -10,7 +10,7 @@
 <script>
 import attrMap from "@/assets/data/attr.json";
 export default {
-    name: "Overview",
+    name: "Attrs",
     props: ["data"],
     data: function () {
         return {};
@@ -40,5 +40,5 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import "../assets/css/overview.less";
+@import "../assets/css/attrs.less";
 </style>

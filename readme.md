@@ -1,47 +1,34 @@
-# VUE前端模板库
-请基于此模板创建项目  
-***$repo***代表当前项目名称,同时也是实际的路由名称  
+# Player
 
-## 初始化说明
-#### 项目创建
-1. 🌈 修改 ***package.json*** 中的name字段为`$repo`
-2. 🌈 修改 ***.github/workflows/deploy.yml*** 中的bucket位置,如非独立仓库,应为`oss://jx3box-www/$repo/`
-3. 🌈 指定 ***.env*** 中的 [**`STATIC_PATH`**](#静态资源路径)
+角色信息渲染组件
 
-#### 项目启动
-1. 🌈 `npm install` 安装依赖
-2. ✨ `npm run serve` 启动本地服务
+## 装分计算
+```装备分数 = 品质 * 品质系数 * 部位系数```
 
-#### 项目修改
-1. 🌈 修改***setting.json***文件,优化seo
+### 品质系数
 
-#### 依赖说明
-1. 🌈 默认基于vue + element ui,lib库请直接在public/$template中引用mirror地址
-2. css变量默认包含 ***./assets/css/var.less*** 自定义变量
-3. css mixin默认包含[csslab](https://github.com/iRuxu/csslab)
+| 品质 | KEY | 系数 |
+| ---- | --- | ---- |
+| 白色 | 1   | 0.8  |
+| 绿色 | 2   | 1.4  |
+| 蓝色 | 3   | 1.6  |
+| 紫色 | 4   | 1.8  |
+| 橙色 | 5   | 2.5  |
 
-#### 部署上线
-+ 🌈 添加项目secrets=>`AccessKey_ID`+`Access_Key_Secret`（公开仓库已共享指定密钥、私有库需要单独设置）
-+ 🌈 （可选）如需要绑定独立域,需在github setting中指定并修改DNS指向.
-+ 🆘 （可选）统一rewrite请补填至apidocs仓库
-+ ✨ ecs需自行部署,执行`git deploy`同步gh-pages分支.
+### 部位系数
 
-## 其它说明
-#### 静态资源路径  
-默认通过 ***.env*** 文件中 **`STATIC_PATH`** 来指定加载路径,可选值:  
-1. 🌍 jsdelivr - 自动回源到github pages  
-2. 🌸 root - 使用相对路径,且项目为独立域时
-3. 🌷 repo - 使用相对路径,且项目没有独立域时
-4. 💟 mirror - 使用OSS=>CDN镜像 【当前默认】
-
-#### 部署集
-github pages与oss由actions自动部署,ecs自行部署
-1. 🌍 github pages - 国外访问endpoint
-2. 💖 ecs - 国内访问endpoint 【当前默认】
-3. 💟 oss - 国内备用方案,当DNS解析为整站CDN时生效  
-
-#### DNS解析
-目前为境外解析至github,境内解析为ecs
-1. 🌍 github pages - 国外直接解析到github
-2. 💖 ecs - 国内A记录至指定ECS 【当前默认】
-3. 💟 oss - 国内备用方案,整站CDN,自动回源至oss
+| 位置 | KEY | 系数 |
+| ---- | --- | ---- |
+| 主武 | 0   | 1.2  |
+| 次武 | 1   | 1.2  |
+| 暗器 | 2   | 0.6  |
+| 衣服 | 3   | 1    |
+| 帽子 | 4   | 0.9  |
+| 项链 | 5   | 0.5  |
+| 戒指 | 6   | 0.5  |
+| 戒指 | 7   | 0.5  |
+| 腰带 | 8   | 0.7  |
+| 腰坠 | 9   | 0.5  |
+| 裤子 | 10  | 1    |
+| 鞋子 | 11  | 0.7  |
+| 护腕 | 12  | 0.7  |

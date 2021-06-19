@@ -2,6 +2,7 @@
     <div class="w-player-talent">
         <h2 class="u-title">
             <i class="el-icon-discount"></i> 角色奇穴
+            <a href="/app/talent/" class="u-link" target="_blank"><i class="el-icon-link"></i> 前往奇穴模拟器</a>
         </h2>
         <div class="u-talent" v-if="list.length > 0">
             <div class="u-talent-item" v-for="item in this.list" :key="item.skill_id">
