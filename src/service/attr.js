@@ -1,0 +1,456 @@
+import {
+    getGrowScore
+} from './gs';
+import {
+    PRE_DEFINED_EMBED_VALUES,
+    VALUE_MAP,
+    XF_DECORATOR,
+    XF_FACTOR } from '../assets/data/role_attr'
+
+class RoleAttribute {
+    constructor(equips, kungfu, person) {
+        this.globalCof = 205 * 110 - 18800;
+
+        this.equips = equips || [];
+        this.kungfu = kungfu || {};
+        this.person = person || {};
+
+        this.BASE = {
+            atVitalityBase: Number(person.atVitalityBase), // 体质
+            atSpunkBase: Number(person.atSpunkBase), // 元气
+            atSpiritBase: Number(person.atSpiritBase), // 根骨
+            atStrengthBase: Number(person.atStrengthBase), // 力道
+            atAgilityBase: Number(person.atAgilityBase), // 身法
+        };
+
+        this.primaryAttr = XF_FACTOR[kungfu.KungfuID]['primaryAttr'];
+        this.primaryAttrVal = this.getTotalAttr(this.primaryAttr);
+    }
+
+    getFiveStoneAttr([attr, decorator], level) {
+        if (level > 0) {
+            if (attr === 'attack') {
+                return decorator === 'PHYSICS'
+                    ? PRE_DEFINED_EMBED_VALUES.physicsAttack[level - 1]
+                    : PRE_DEFINED_EMBED_VALUES.magicAttack[level - 1];
+            }
+            return VALUE_MAP[attr][level -1] || 0;
+        }
+        return 0;
+    }
+    /**
+     * 属性值 = 装备白字固定属性 + 装备基础属性 + 装备精炼成长属性 + 五行石属性 + 五彩石属性 + 附魔属性 + 心法基本属性
+     * @param {string} attr 属性key
+     */
+    getTotalAttr(attr) {
+        let equipAttr = 0; // 装备的属性
+
+        this.equips.forEach(equip => {
+            // 装备白字固定属性，不随精炼而变化 内防 外访 远程伤害提高 速度 etc. 目前只有 3 个 base
+            let baseAttr = 0;
+            baseAttr += (equip.Base1Type && equip.Base1Type.Desc === attr) ? Number(equip.Base1Type.Base1Max) : 0;
+            baseAttr += (equip.Base2Type && equip.Base2Type.Desc === attr) ? Number(equip.Base2Type.Base2Max) : 0;
+            baseAttr += (equip.Base3Type && equip.Base3Type.Desc === attr) ? Number(equip.Base3Type.Base3Max) : 0;
+
+            // 装备属性 白字和绿字固定属性 会随精炼而变化
+            const [ modifyAttr ] = equip.ModifyType.filter(e => e.Desc === attr);
+            const growthBase = modifyAttr ? Number(modifyAttr.Param1Max) : 0; // 基础值
+            const strengthLevel = equip.StrengthLevel; // 精炼等级
+            const growthAttr = getGrowScore(growthBase, strengthLevel); // 成长值
+
+            // 五行石
+            const [ fiveStone ] = equip.FiveStone ? equip.FiveStone.filter(f => f.Desc === attr) : [];
+            const attackAttr = attr.includes('PowerBase') ? 'attack' : attr;
+            const decorator = attr.includes('Physics') ? 'PHYSICS': 'MAGIC';
+            const fiveStoneAttr = this.getFiveStoneAttr([ attackAttr, decorator ], (fiveStone && fiveStone.Level) || 0);
+
+            // 五彩石
+            const [ colorStone ] = equip.ColorStone ? equip.ColorStone.Attributes.filter(c => c.Desc === attr) : [];
+            const colorStoneAttr = Number(colorStone && colorStone.Attribute1Value1) || 0;
+
+            // 附魔
+            const [ enchant ] = equip.WPermanentEnchant ?
+                equip.WPermanentEnchant.Attributes.filter(w => w.Desc === attr) : [];
+
+            const enchantAttr = Number(enchant && enchant.Attribute1Value1) || 0;
+
+            equipAttr += baseAttr + growthBase + growthAttr + fiveStoneAttr + colorStoneAttr + enchantAttr;
+        })
+
+        const xfAttr = this.BASE[attr] || 0;
+
+        return xfAttr + equipAttr;
+    }
+
+    // 获取基础攻击力
+    getBaseAttack() {
+        const decoratedAttack = {
+            PHYSICS: 0,
+            MAGIC: 0
+        }
+
+        const kungfu = this.kungfu;
+
+        // 力道加成 外功攻击 * 0.15
+        decoratedAttack.PHYSICS = this.getTotalAttr('atStrengthBase') * 0.15;
+        // 元气加成 内功攻击 * 0.18
+        decoratedAttack.MAGIC = this.getTotalAttr('atSpunkBase') * 0.18;
+
+        // 心法基础攻击
+        const [attackDecorator] =  Object.keys(kungfu.Attrib).filter(a => a.includes('AttackPowerBase'));
+        const xfAttack =  Number(kungfu.Attrib[attackDecorator]) || 0;
+
+        // 内外功攻击类型
+        const decorator = XF_DECORATOR[kungfu.KungfuID].find(d => d[0] === 'attack');
+
+        // 具体攻击类型
+        const attackType = XF_FACTOR[kungfu.KungfuID]['attackType'];
+
+        // 装备攻击
+        let equipAttack = 0;
+        
+        if (decorator[1] === 'MAGIC') {
+            equipAttack = this.getTotalAttr(attackType) + this.getTotalAttr('atMagicAttackPowerBase');
+        } else {
+            equipAttack = this.getTotalAttr(attackType);
+        }
+
+        return  decoratedAttack[decorator[1]] + xfAttack + equipAttack;
+    }
+
+    /**
+     * 获取面板攻击力
+     * @returns 基础攻击力 + 心法额外加成
+     */
+    getAttack() {
+        const primaryAttack = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['attack'] || 0);
+
+        return Math.round(this.getBaseAttack() + primaryAttack);
+    }
+    /**
+     * 会心等级 = 身法/根骨加成 + 心法基础会心 + 装备会心 + 主属性会心加成
+     */
+    getCrit() {
+        const decoratedCrit = {
+            PHYSICS: 0,
+            MAGIC: 0
+        }
+        const kungfu = this.kungfu;
+
+        // 身法加成 外功会心 * 0.64
+        decoratedCrit.PHYSICS = this.getTotalAttr('atAgilityBase') * 0.64;
+        // 根骨加成 内功会心 * 0.64
+        decoratedCrit.MAGIC = this.getTotalAttr('atSpiritBase') * 0.64;
+
+        // 心法基础会心
+        const [ critDecorator ] =  Object.keys(kungfu.Attrib).filter(a => a.includes('CriticalStrike'));
+        const xfCrit =  Number(kungfu.Attrib[critDecorator]) || 0;
+
+        // 会心等级类型 内外
+        const decorator = XF_DECORATOR[kungfu.KungfuID].find(d => d[0] === 'crit');
+
+        // 具体会心类型
+        const critType = XF_FACTOR[kungfu.KungfuID]['critType'];
+
+        // 装备会心等级
+        let equipCrit = 0;
+
+        if (decorator[1] === 'MAGIC') {
+            equipCrit = this.getTotalAttr(critType) + this.getTotalAttr('atMagicCriticalStrike');
+        } else {
+            equipCrit = this.getTotalAttr(critType);
+        }
+
+        // 装备全会心等级
+        const allEquipCrit = this.getTotalAttr('atAllTypeCriticalStrike');
+
+        // 心法加成会心等级
+        const primaryCrit = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['crit'] || 0)
+
+        return Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit);
+    }
+
+    // 会心率
+    getCritRate() {
+        const cof = (9.530 * this.globalCof) / 100;
+        return `${(this.getCrit() / cof).toFixed(2)}%`;
+    }
+
+    /**
+     * 会效等级 = 心法基础会效 + 装备会效 + 主属性会效加成
+     */
+    getCritEffect() {
+        const kungfu = this.kungfu;
+        // 心法基础会效
+        const [critEffectDecorator] =  Object.keys(kungfu.Attrib).filter(a => a.includes('CriticalDamagePowerBase'));
+        const xfCritEffect =  Number(kungfu.Attrib[critEffectDecorator]) || 0;
+
+        // 会效等级内外类型
+        const decorator = XF_DECORATOR[kungfu.KungfuID].find(d => d[0] === 'critEffect');
+
+        // 具体会效类型
+        const critEffectType = XF_FACTOR[kungfu.KungfuID]['critEffectType'];
+
+        // 装备会效
+        let equipCritEffect = 0;
+
+        if (decorator[1] === 'MAGIC') {
+            equipCritEffect = this.getTotalAttr(critEffectType) + this.getTotalAttr('atMagicCriticalDamagePowerBase');
+        } else {
+            equipCritEffect = this.getTotalAttr(critEffectType);
+        }
+
+        // 装备全会效
+        const allEquipCritEffect = this.getTotalAttr('atAllTypeCriticalDamagePowerBase');
+
+        const primaryCritEffect = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['critEffect'] || 0)
+
+        return Math.round(xfCritEffect + equipCritEffect + allEquipCritEffect + primaryCritEffect)
+    }
+    // 会效
+    getCritEffectRate() {
+        const critEffect = this.getCritEffect()
+        const cof = (3.335 * this.globalCof) / 100;
+        return `${(175 + critEffect / cof).toFixed(2)}%`;
+    }
+
+    // 加速等级 = 装备加速等级 + 主属性加速等级加成
+    getHaste() {
+        const primaryHaste = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['haste'] || 0);
+
+        const equipHaste = this.getTotalAttr('atHasteBase');
+
+        return Math.round(primaryHaste + equipHaste)
+    }
+
+    // 加速率
+    getHasteRate() {
+        const cof = (11.695 * this.globalCof) / 100;
+        const haste = this.getHaste();
+        return `${(Math.min(haste / cof, 25)).toFixed(2)}%`;
+    }
+
+    /**
+     * 破防 = 力道/元气破防加成 + 心法基础破防 + 装备破防 + 主属性破防加成
+     */
+    getOvercome() {
+        const decoratedOvercome = {
+            PHYSICS: 0,
+            MAGIC: 0
+        };
+
+        const kungfu = this.kungfu;
+
+        // 力道 外功破防 * 0.3
+        decoratedOvercome.PHYSICS = this.getTotalAttr('atStrengthBase') * 0.3;
+
+        // 元气 内功破防 * 0.3
+        decoratedOvercome.MAGIC = this.getTotalAttr('atSpunkBase') * 0.3;
+
+        // 心法基础破防
+        const [overcomeDecorator] = Object.keys(kungfu.Attrib).filter(o => o.includes('OvercomeBase'));
+        const xfOvercome = Number(kungfu.Attrib[overcomeDecorator]) || 0;
+
+        // 破防类型 内外
+        const decorator = XF_DECORATOR[kungfu.KungfuID].find(d => d[0] === 'overcome');
+
+        // 具体破防类型
+        const overcomeType = XF_FACTOR[kungfu.KungfuID]['overcomeType'];
+
+        // 装备破防
+        let equipOvercome = 0;
+
+        if (decorator[1] === 'MAGIC') {
+            equipOvercome = this.getTotalAttr(overcomeType) + this.getTotalAttr('atMagicOvercome');
+        } else {
+            equipOvercome = this.getTotalAttr(overcomeType);
+        }
+
+        // 主属性破防加成
+        const primaryOvercome = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['overcome'] || 0);
+
+        return Math.round(decoratedOvercome[decorator[1]] + xfOvercome + equipOvercome + primaryOvercome)
+    }
+    // 破防
+    getOvercomeRate() {
+        const overcome = this.getOvercome();
+        const cof = (9.530 * this.globalCof) / 100;
+
+        return `${(overcome / cof).toFixed(2)}%`;
+    }
+
+    // 无双等级
+    getStrain() {
+        const kungfu = this.kungfu;
+        // 装备无双
+        const equipStrain = this.getTotalAttr('atStrainBase');
+
+        // 主属性无双加成
+        const primaryStrain = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['strain'] || 0)
+
+        const strain = equipStrain + primaryStrain;
+
+        return strain;
+    }
+    // 无双率
+    getStrainRate() {
+        const strain = this.getStrain()
+        const cof = (9.189 * this.globalCof) / 100;
+        return `${(strain / cof).toFixed(2)}%`;
+    }
+    // 破招
+    getSurplus() {
+        const kungfu = this.kungfu;
+        // 装备破招
+        const equipSurplus = this.getTotalAttr('atSurplusValueBase');
+        
+        // 主属性破招加成
+        const primarySurplus = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['surplus'] || 0);
+
+        const surplus = equipSurplus + primarySurplus;
+        return surplus;
+    }
+
+    // 气血值
+    getHealth() {
+        const kungfu = this.kungfu;
+        const cof = Math.round((XF_FACTOR[this.kungfu.KungfuID]['base']['health_override']) * 1024) / 1024;
+    
+        const equipHealth = this.getTotalAttr('atMaxLifeAdditional');
+
+        const primaryHealth = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['health'] || 0)
+    
+        const health = (this.getTotalAttr('atVitalityBase') * 10 + 23766) * cof
+            + primaryHealth + equipHealth
+    
+        return Math.floor(health);
+    }
+
+    // 外防等级
+    getPhysicsShield() {
+        const kungfu = this.kungfu;
+        // 装备外防
+        const equipPhysicsShield = this.getTotalAttr('atPhysicsShieldBase');
+
+        // 主属性加成外防
+        const primaryPhysicsShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['physicsShield_addtional'] || 0)
+
+        const physicsShield = XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'] + equipPhysicsShield
+            + primaryPhysicsShield
+            + (XF_FACTOR[kungfu.KungfuID]['physicsShield'] || 0);
+
+        return physicsShield;
+    }
+    // 外功防御
+    getPhysicsShieldRate() {
+        const physicsShield = this.getPhysicsShield();
+        const cof = 5.091 * this.globalCof;
+
+        return `${((physicsShield / (physicsShield + cof)) * 100).toFixed(2)}%`;
+    }
+
+    // 内防等级
+    getMagicShield() {
+        const kungfu = this.kungfu;
+        // 装备内防
+        const equipMagicShield = this.getTotalAttr('atMagicShield');
+
+        // 主属性内防加成
+        const primaryMagicShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['magicShield_addtional'] || 0)
+
+
+        const magicShield = XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
+            + primaryMagicShield
+            + (XF_FACTOR[kungfu.KungfuID]['magicShield'] || 0);
+
+        return magicShield;
+    }
+    // 内功功防御
+    getMagicShieldRate() {
+        const magicShield = this.getMagicShield();
+        const cof = 5.091 * this.globalCof;
+
+        return `${((magicShield / (magicShield + cof)) * 100).toFixed(2)}%`;
+    }
+
+    // 闪躲
+    getDodge() {
+        const kungfu = this.kungfu;
+        const equipDodge = this.getTotalAttr('atDodge');
+
+        // 主属性闪躲加成
+        const primaryDodge = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0);
+
+        return Math.round(equipDodge + primaryDodge)
+    }
+    // 闪躲率
+    getdodgeRate() {
+        const cof = 4.628 * this.globalCof;
+        const dodge = this.getDodge();
+        return `${((dodge / (cof + dodge)) * 100).toFixed(2)}%`;
+    }
+
+    // 招架
+    getParryBase() {
+        const kungfu = this.kungfu;
+        const equipParryBase = this.getTotalAttr('atParryBase');
+
+        // 主属性
+        const primaryParryBase = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['parryBase'] || 0)
+
+        return Math.round(equipParryBase + primaryParryBase)
+    }
+    // 招架率
+    getParryBaseRate() {
+        const cof = 4.345 * this.globalCof;
+        const parryBase = this.getParryBase()
+        return `${(3 + (parryBase / (cof + parryBase)) * 100).toFixed(2)}%`;
+    }
+    // 拆招
+    getParryValue() {
+        const kungfu = this.kungfu;
+        const equipParryValue = this.getTotalAttr('atParryValueBase');
+
+        // 主属性
+        const primaryParryValue = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['parryValue'] || 0)
+
+        return Math.round(equipParryValue + primaryParryValue)
+    }
+
+    // 御劲
+    getToughness() {
+        const kungfu = this.kungfu;
+        const equipToughness = this.getTotalAttr('atToughnessBase');
+
+        // 主属性
+        const primaryToughness = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['toughness'] || 0);
+
+        return Math.round(equipToughness + primaryToughness)
+    }
+    getToughnessRate() {
+        const cof = 9.530 * this.globalCof;
+        const toughness = this.getToughness();
+        return `${((toughness / cof) * 100).toFixed(2)}%`;
+    }
+    // 化劲
+    getHuajing() {
+        const kungfu = this.kungfu;
+        const equipHuajing = this.getTotalAttr('atDecriticalDamagePowerBase');
+
+        // 主属性
+        const primaryHuajing = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['huajing_addtional'] || 0)
+
+        const huajing = XF_FACTOR[kungfu.KungfuID]['huajing'] + equipHuajing + primaryHuajing;
+
+        return Math.round(huajing)
+    }
+
+    getHuajingRate() {
+        const cof = 1.380 * this.globalCof;
+        const huajing = this.getHuajing();
+        return `${((huajing / (cof + huajing)) * 100).toFixed(2)}%`;
+    }
+
+}
+
+export default RoleAttribute
