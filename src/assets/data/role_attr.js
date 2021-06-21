@@ -50,6 +50,8 @@ const VALUE_MAP = {
     atLunarOvercomeBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 阴性破防
     atSolarOvercomeBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 阳性破防
 
+    atPhysicsCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 外功会效
+
     hit: PRE_DEFINED_EMBED_VALUES.secondaryAttribute,
     atStrainBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 无双
     atSurplusValueBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 破招
@@ -348,31 +350,377 @@ const XF_FACTOR = {
         critType: 'atPhysicsCriticalStrike',
         critEffectType: 'atPhysicsCriticalDamagePowerBase',
         overcomeType: 'atPhysicsOvercomeBase'
+    },
+    '10585': { // 隐龙诀
+        attack: 1.5,
+        overcome: 0.47,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        huajing: 1725,
+        primaryAttr: 'atAgilityBase',
+        attackType: 'atPhysicsAttackPowerBase',
+        critType: 'atPhysicsCriticalStrike',
+        critEffectType: 'atPhysicsCriticalDamagePowerBase',
+        overcomeType: 'atPhysicsOvercomeBase'
+    },
+    '10615': { // 太玄经
+        attack: 1.8,
+        crit: 0.47,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        huajing: 1725,
+        physicsShield: 0,
+        magicShield: 231,
+        primaryAttr: 'atSpunkBase',
+        attackType: 'atNeutralAttackPowerBase',
+        critType: 'atNeutralCriticalStrike',
+        critEffectType: 'atNeutralCriticalDamagePowerBase',
+        overcomeType: 'atNeutralOvercomeBase'
+    },
+    '10028': { // 离经易道
+        heal: 1.85,
+        crit: 0.38,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 578,
+        physicsShield_addtional: 0,
+        magicShield: 578,
+        magicShield_addtional: 0,
+        huajing: 1725,
+        primaryAttr: 'atSpiritBase',
+        attackType: 'atNeutralAttackPowerBase',
+        critType: 'atNeutralCriticalStrike',
+        critEffectType: 'atNeutralCriticalDamagePowerBase',
+        overcomeType: 'atNeutralOvercomeBase'
+    },
+    '10080': { // 云裳心经
+        heal: 1.75,
+        crit: 0.21,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 578,
+        physicsShield_addtional: 0,
+        magicShield: 578,
+        magicShield_addtional: 0,
+        huajing: 1725,
+        primaryAttr: 'atSpiritBase',
+        attackType: 'atLunarAttackPowerBase',
+        critType: 'atLunarCriticalStrike',
+        critEffectType: 'atLunarCriticalDamagePowerBase',
+        overcomeType: 'atLunarOvercomeBase'
+    },
+    '10176': { // 补天诀
+        heal: 1.85,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 0,
+        physicsShield_addtional: 0,
+        magicShield: 578,
+        magicShield_addtional: 0,
+        huajing: 1725,
+        primaryAttr: 'atSpiritBase',
+        attackType: 'atPoisonAttackPowerBase',
+        critType: 'atPoisonCriticalStrike',
+        critEffectType: 'atPoisonCriticalDamagePowerBase',
+        overcomeType: 'atPoisonOvercomeBase'
+    },
+    '10448': { // 相知
+        heal: 1.7,
+        crit: 0.31,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 0,
+        physicsShield_addtional: 0,
+        magicShield: 578,
+        magicShield_addtional: 0,
+        huajing: 1725,
+        primaryAttr: 'atSpiritBase',
+        attackType: 'atLunarAttackPowerBase',
+        critType: 'atLunarCriticalStrike',
+        critEffectType: 'atLunarCriticalDamagePowerBase',
+        overcomeType: 'atLunarOvercomeBase'
+    },
+    '10002': { // 洗髓经
+        health: 2.5,
+        attack: 0.05,
+        base: {
+            health_override: 1.34,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 548,
+        magicShield: 914,
+        magicShield_addtional: 0.1,
+    },
+    '10062': { // 铁牢律
+        health: 1.5,
+        attack: 0.04,
+        parryBase: 0.1,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 914,
+        physicsShield_addtional: 0.1,
+        magicShield: 0,
+        magicShield_addtional: 0,
+        primaryAttr: 'atVitalityBase',
+        attackType: 'atPhysicsAttackPowerBase',
+        critType: 'atPhysicsCriticalStrike',
+        critEffectType: 'atPhysicsCriticalDamagePowerBase',
+        overcomeType: 'atPhysicsOvercomeBase'
+    },
+    '10243': { // 明尊琉璃体
+        health: 1.25,
+        attack: 0.05,
+        parryBase: 0.1,
+        dodge: 0.225,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 457,
+        physicsShield_addtional: 0.1,
+        magicShield: 457,
+        magicShield_addtional: 0,
+        primaryAttr: 'atVitalityBase',
+        attackType: 'atSolarAndLunarAttackPowerBase',
+        critType: 'atSolarAndLunarCriticalStrike',
+        critEffectType: 'atSolarAndLunarCriticalDamagePowerBase',
+        overcomeType: 'atSolarAndLunarOvercomeBase'
+    },
+    '10389': { // 铁骨衣
+        health: 2.2,
+        attack: 0.04,
+        parryValue: 0.5,
+        parryBase: 0.15,
+        base: {
+            health_override: 1.22,
+            physicsShield: 400,
+            magicShield: 400
+        },
+        physicsShield: 548,
+        physicsShield_addtional: 0,
+        magicShield: 0,
+        magicShield_addtional: 0,
+        primaryAttr: 'atVitalityBase',
+        attackType: 'atPhysicsAttackPowerBase',
+        critType: 'atPhysicsCriticalStrike',
+        critEffectType: 'atPhysicsCriticalDamagePowerBase',
+        overcomeType: 'atPhysicsOvercomeBase'
     }
 }
 
 const XF_DECORATOR = {
-    "10533": [
-        ["attack", "PHYSICS"],
-        ["hit", "PHYSICS"],
-        ["crit", "PHYSICS"],
-        ["critEffect", "PHYSICS"],
-        ["overcome", "PHYSICS"]
-    ],
-    "10390": [
-        ["attack", "PHYSICS"],
-        ["hit", "PHYSICS"],
-        ["crit", "PHYSICS"],
-        ["critEffect", "PHYSICS"],
-        ["overcome", "PHYSICS"]
-    ],
-    "10081": [
+    "10003": [ // 易筋经
         ["attack", "MAGIC"],
         ["hit", "MAGIC"],
         ["crit", "MAGIC"],
         ["critEffect", "MAGIC"],
         ["overcome", "MAGIC"]
-    ]
+    ],
+    "10014": [ // 紫霞功
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10015": [ // 太虚剑意 
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10021": [ // 花间
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    '10026': [ // 傲血战意
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10533": [ // 凌海诀
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10144": [ // 问水诀
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10145": [ // 山居剑意
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10390": [ // 分山劲
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10081": [ // 冰心诀
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10175": [ // 毒经
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10242": [ // 焚影圣诀
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10447": [ // 莫问
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10028": [ // 离经易道
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10080": [ // 云裳心经
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10176": [ // 补天诀
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10448": [ // 相知
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10002": [ // 洗髓经
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10615": [ // 太玄经
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10243": [ // 明尊琉璃体
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "MAGIC"],
+        ["critEffect", "MAGIC"],
+        ["overcome", "MAGIC"]
+    ],
+    "10585": [ // 隐龙诀
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10224": [ // 惊羽诀
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10268": [ // 笑尘诀
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10464": [ // 北傲诀
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10062": [ // 铁牢律
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10389": [ // 铁骨衣
+        ["attack", "PHYSICS"],
+        ["hit", "PHYSICS"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "PHYSICS"]
+    ],
+    "10225": [ // 田螺诡道
+        ["attack", "MAGIC"],
+        ["hit", "MAGIC"],
+        ["crit", "PHYSICS"],
+        ["critEffect", "PHYSICS"],
+        ["overcome", "MAGIC"]
+    ],
 }
 
 export {

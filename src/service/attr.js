@@ -60,7 +60,7 @@ class RoleAttribute {
 
             // 五行石
             const [ fiveStone ] = equip.FiveStone ? equip.FiveStone.filter(f => f.Desc === attr) : [];
-            const attackAttr = attr.includes('PowerBase') ? 'attack' : attr;
+            const attackAttr = attr.includes('AttackPowerBase') ? 'attack' : attr;
             const decorator = attr.includes('Physics') ? 'PHYSICS': 'MAGIC';
             const fiveStoneAttr = this.getFiveStoneAttr([ attackAttr, decorator ], (fiveStone && fiveStone.Level) || 0);
 
@@ -205,6 +205,8 @@ class RoleAttribute {
 
         const primaryCritEffect = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['critEffect'] || 0)
 
+        // console.log(xfCritEffect, equipCritEffect, allEquipCritEffect, primaryCritEffect)
+
         return Math.round(xfCritEffect + equipCritEffect + allEquipCritEffect + primaryCritEffect)
     }
     // 会效
@@ -268,6 +270,8 @@ class RoleAttribute {
 
         // 主属性破防加成
         const primaryOvercome = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['overcome'] || 0);
+
+        console.log(decoratedOvercome[decorator[1]], xfOvercome, equipOvercome, primaryOvercome)
 
         return Math.round(decoratedOvercome[decorator[1]] + xfOvercome + equipOvercome + primaryOvercome)
     }

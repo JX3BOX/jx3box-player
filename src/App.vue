@@ -18,9 +18,11 @@ export default {
             // playerId: "33065480",  //和尚
             // playerId: "33065534",  //霸刀
             // playerId: "33146204",  //藏剑
-            playerId: "33154610",  //醉栩蓬莱
+            // playerId: "33154610",  //醉栩蓬莱
             // playerId: "10537412",  //醉栩苍云
-            server: '蝶恋花',
+            playerId: "17217706",  //醉栩凌雪
+            // server: '蝶恋花',
+            server: '斗转星移',
 
             // playerId: "21041450",
             // server: "唯我独尊",

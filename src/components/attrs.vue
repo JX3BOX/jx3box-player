@@ -4,7 +4,7 @@
             <i class="el-icon-stopwatch"></i> 角色属性
         </h2>
         <el-row :gutter="20">
-            <el-col :span="6" v-for="(item,i) in result" :key="i">
+            <el-col :span="6" v-for="(item,i) in results" :key="i">
                 <div class="u-item">
                     <span class="u-key">{{ item.key | showAttrName }}</span>
                     <span class="u-val">{{ item.val }}</span>
@@ -17,7 +17,7 @@
 import attrMap from "@/assets/data/attr.json";
 import { __dataPath } from '@jx3box/jx3box-common/data/jx3box.json'
 import axios from 'axios';
-import enchants from '@/assets/data/enchants.json'
+// import enchants from '@/assets/data/enchants.json'
 import RoleAttribute from '@/service/attr.js';
 export default {
     name: "Attrs",
@@ -32,7 +32,7 @@ export default {
                 "atAgilityBase",
                 "atSpunkBase"
             ],
-            enchants,
+            // enchants,
             roleAttr: null
         };
     },
@@ -126,16 +126,17 @@ export default {
             results.push({ key: '化劲', val: huajing });
         },
     },
-    methods: {},
     filters: {
         showAttrName: function (key) {
             if (attrMap[key]) {
                 return attrMap[key];
             }
-            return "";
+            return key;
         },
     },
-    created: function () {},
+    created: function () {
+        this.init()
+    },
 };
 </script>
 
