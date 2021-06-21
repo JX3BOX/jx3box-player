@@ -19,28 +19,7 @@ import attrMap from "@/assets/data/attr.json";
 import { __dataPath } from '@jx3box/jx3box-common/data/jx3box.json'
 import axios from 'axios';
 import enchants from '@/assets/data/enchants.json'
-import {
-    getAttack,
-    getPrimaryAttribute, 
-    getCritRate, 
-    getCritEffectRate, 
-    getHaste, 
-    getHasteRate, 
-    getOvercome,
-    getOvercomeRate,
-    getStrain,
-    getStrainRate,
-    getSurplus,
-    getHealth,
-    getPhysicsSheild,
-    getPhysicsSheildRate,
-    getMagicSheild,
-    getMagicSheildRate,
-    getParryBaseRate,
-    getParryValue,
-    getToughnessRate,
-    getHuajingRate
-} from "@/service/attr.js";
+import RoleAttribute from '@/service/attr.js';
 export default {
     name: "Attrs",
     props: ["data"],
@@ -48,104 +27,102 @@ export default {
         return {
             results: [],
             displayNames: [
-                "atVitality",
+                "atVitalityBase",
                 "atSpiritBase",
                 "atStrengthBase",
                 "atAgilityBase",
                 "atSpunkBase"
             ],
-            enchants
+            enchants,
+            roleAttr: null
         };
     },
     computed: {
     },
     methods: {
         init: function() {
+            this.roleAttr = new RoleAttribute(this.data.Equips, this.data.Kungfu, this.data.Person);
             const { results, displayNames } = this
 
             displayNames.forEach(key => {
-                let val
-                if (key === 'atVitality') {
-                    val = getPrimaryAttribute(this.data.Equips, 'atVitalityBase');
-                } else {
-                    val = getPrimaryAttribute(this.data.Equips, key);
-                }
-                results.push({ key, val })
+                results.push({ key, val: this.roleAttr.getTotalAttr(key) })
             })
             
-            const physicsAttack = getAttack([this.data.Equips, this.data.Kungfu])
+            // const physicsAttack = getAttack([this.data.Equips, this.data.Kungfu])
+            const physicsAttack = this.roleAttr.getAttack()
 
             results.push({ key: 'atPhysicsAttackPowerBase', val: physicsAttack });
 
-            const critRate = getCritRate(this.data.Equips, this.data.Kungfu);
+            // const critRate = getCritRate(this.data.Equips, this.data.Kungfu);
+            const critRate = this.roleAttr.getCritRate();
 
-            results.push({ key: 'crit', val: critRate });
+            results.push({ key: '会心', val: critRate });
 
-            const critEffect = getCritEffectRate(this.data.Equips, this.data.Kungfu);
+            const critEffect = this.roleAttr.getCritEffectRate();
 
-            results.push({ key: 'critEffect', val: critEffect });
+            results.push({ key: '会效', val: critEffect });
 
-            const haste = getHaste(this.data.Equips, this.data.Kungfu);
+            const haste = this.roleAttr.getHaste();
 
             results.push({ key: 'atHasteBase', val: haste });
 
-            const hasteRate = getHasteRate(this.data.Equips, this.data.Kungfu);
+            const hasteRate = this.roleAttr.getHasteRate();
 
             results.push({ key: 'atHasteBasePercentAdd', val: hasteRate });
 
-            const overcome = getOvercome(this.data.Equips, this.data.Kungfu);
+            const overcome = this.roleAttr.getOvercome();
 
-            results.push({ key: 'overcome', val: overcome });
+            results.push({ key: '破防等级', val: overcome });
 
-            const overcomeRate = getOvercomeRate(this.data.Equips, this.data.Kungfu);
+            const overcomeRate = this.roleAttr.getOvercomeRate();
 
             results.push({ key: '破防', val: overcomeRate })
 
-            const strain = getStrain(this.data.Equips, this.data.Kungfu);
+            const strain = this.roleAttr.getStrain();
 
-            results.push({ key: 'atStrainBase', val: strain })
+            results.push({ key: '无双等级', val: strain })
             
-            const strainRate = getStrainRate(this.data.Equips, this.data.Kungfu);
+            const strainRate = this.roleAttr.getStrainRate();
 
-            results.push({ key: '无双', val: strainRate })
+            results.push({ key: 'atStrainBase', val: strainRate })
             
-            const surplus = getSurplus(this.data.Equips, this.data.Kungfu);
+            const surplus = this.roleAttr.getSurplus();
 
             results.push({ key: 'atSurplusValueBase', val: surplus });
             
-            const health = getHealth(this.data.Equips, this.data.Kungfu);
+            const health = this.roleAttr.getHealth();
 
             results.push({ key: '气血', val: health });
             
-            const physicsShield = getPhysicsSheild(this.data.Equips, this.data.Kungfu);
+            const physicsShield = this.roleAttr.getPhysicsShield();
 
             results.push({ key: '外防等级', val: physicsShield });
             
-            const physicsShieldRate = getPhysicsSheildRate(this.data.Equips, this.data.Kungfu);
+            const physicsShieldRate = this.roleAttr.getPhysicsShieldRate();
 
             results.push({ key: '外功防御', val: physicsShieldRate });
             
-            const magicSheild = getMagicSheild(this.data.Equips, this.data.Kungfu);
+            const magicShield = this.roleAttr.getMagicShield();
 
-            results.push({ key: '内防等级', val: magicSheild });
+            results.push({ key: '内防等级', val: magicShield });
             
-            const magicShieldRate = getMagicSheildRate(this.data.Equips, this.data.Kungfu);
+            const magicShieldRate = this.roleAttr.getMagicShieldRate();
 
             results.push({ key: '内功防御', val: magicShieldRate });
 
-            const parryBaseRate = getParryBaseRate(this.data.Equips, this.data.Kungfu);
+            const parryBaseRate = this.roleAttr.getParryBaseRate();
 
             results.push({ key: '招架', val: parryBaseRate });
 
-            const parryValue = getParryValue(this.data.Equips, this.data.Kungfu);
+            const parryValue = this.roleAttr.getParryValue();
 
             results.push({ key: '拆招', val: parryValue });
 
-            const toughnessRate = getToughnessRate(this.data.Equips, this.data.Kungfu);
+            const toughnessRate = this.roleAttr.getToughnessRate();
 
             results.push({ key: '御劲', val: toughnessRate });
 
-            const huajing = getHuajingRate(this.data.Equips, this.data.Kungfu);
+            const huajing = this.roleAttr.getHuajingRate();
 
             results.push({ key: '化劲', val: huajing });
         },
