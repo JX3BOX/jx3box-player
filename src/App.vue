@@ -20,7 +20,8 @@ export default {
             // playerId: "33146204",  //藏剑
             // playerId: "33154610",  //醉栩蓬莱
             // playerId: "10537412",  //醉栩苍云
-            playerId: "17217706",  //醉栩凌雪
+            // playerId: "17217706",  //醉栩凌雪
+            playerId: "2382163",  //yyz
             // server: '蝶恋花',
             server: '斗转星移',
 

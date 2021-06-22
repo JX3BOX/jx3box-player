@@ -22,6 +22,8 @@ class RoleAttribute {
             atStrengthBase: Number(person.atStrengthBase), // 力道
             atAgilityBase: Number(person.atAgilityBase), // 身法
         };
+        // 套装
+        this.SET = {};
 
         this.primaryAttr = XF_FACTOR[kungfu.KungfuID]['primaryAttr'];
         this.primaryAttrVal = this.getTotalAttr(this.primaryAttr);
@@ -44,6 +46,8 @@ class RoleAttribute {
      */
     getTotalAttr(attr) {
         let equipAttr = 0; // 装备的属性
+
+        const SETNUM = {}
 
         this.equips.forEach(equip => {
             // 装备白字固定属性，不随精炼而变化 内防 外访 远程伤害提高 速度 etc. 目前只有 3 个 base
@@ -72,10 +76,32 @@ class RoleAttribute {
             const [ enchant ] = equip.WPermanentEnchant ?
                 equip.WPermanentEnchant.Attributes.filter(w => w.Desc === attr) : [];
 
+            // 大附魔 todo
+
+            // 切糕效果
+            let setAttr = 0;
+            if (equip.SetID && equip.Set) {
+                if (!this.SET[equip.SetID]) this.SET[equip.SetID] = equip.Set;
+
+                if (!SETNUM[equip.SetID]) {
+                    SETNUM[equip.SetID] = 1;
+                } else {
+                    SETNUM[equip.SetID]++;
+                }
+
+                if (SETNUM[equip.SetID] > 3) {
+                    const temp = this.SET[equip.SetID][1];
+                    setAttr = temp['Desc'] === attr ? Number(temp['Param1Max']) : 0
+                } else if (SETNUM[equip.SetID] > 1) {
+                    const temp = this.SET[equip.SetID][0];
+                    setAttr = temp['Desc'] === attr ? Number(temp['Param1Max']) : 0
+                }
+            }
+
             const enchantAttr = Number(enchant && enchant.Attribute1Value1) || 0;
 
-            equipAttr += baseAttr + growthBase + growthAttr + fiveStoneAttr + colorStoneAttr + enchantAttr;
-        })
+            equipAttr += baseAttr + growthBase + growthAttr + fiveStoneAttr + colorStoneAttr + enchantAttr + setAttr;
+        });
 
         const xfAttr = this.BASE[attr] || 0;
 
@@ -106,16 +132,22 @@ class RoleAttribute {
         // 具体攻击类型
         const attackType = XF_FACTOR[kungfu.KungfuID]['attackType'];
 
+        // 大附魔 todo
+        // 七秀剑舞buff
+
         // 装备攻击
         let equipAttack = 0;
         
         if (decorator[1] === 'MAGIC') {
+            console.log('magic', this.getTotalAttr(attackType), this.getTotalAttr('atMagicAttackPowerBase'))
             equipAttack = this.getTotalAttr(attackType) + this.getTotalAttr('atMagicAttackPowerBase');
         } else {
             equipAttack = this.getTotalAttr(attackType);
         }
 
-        return  decoratedAttack[decorator[1]] + xfAttack + equipAttack;
+        // console.log('baseAttack', decoratedAttack[decorator[1]]+xfAttack+equipAttack)
+
+        return decoratedAttack[decorator[1]] + xfAttack + equipAttack;
     }
 
     /**
@@ -124,6 +156,8 @@ class RoleAttribute {
      */
     getAttack() {
         const primaryAttack = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['attack'] || 0);
+
+        // console.log('attack', this.getBaseAttack(), primaryAttack)
 
         return Math.round(this.getBaseAttack() + primaryAttack);
     }
@@ -165,15 +199,21 @@ class RoleAttribute {
         const allEquipCrit = this.getTotalAttr('atAllTypeCriticalStrike');
 
         // 心法加成会心等级
-        const primaryCrit = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['crit'] || 0)
+        const primaryCrit = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['crit'] || 0);
+
+        console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
+
+        console.log(Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit))
 
         return Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit);
     }
 
     // 会心率
     getCritRate() {
+        // 如果心法为鲸鱼或者田螺
+        const flag = Number(['10224', '10225'].includes(this.kungfu.KungfuID));
         const cof = (9.530 * this.globalCof) / 100;
-        return `${(this.getCrit() / cof).toFixed(2)}%`;
+        return `${(this.getCrit() / cof + flag).toFixed(2)}%`;
     }
 
     /**
@@ -271,7 +311,7 @@ class RoleAttribute {
         // 主属性破防加成
         const primaryOvercome = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['overcome'] || 0);
 
-        console.log(decoratedOvercome[decorator[1]], xfOvercome, equipOvercome, primaryOvercome)
+        // console.log(decoratedOvercome[decorator[1]], xfOvercome, equipOvercome, primaryOvercome)
 
         return Math.round(decoratedOvercome[decorator[1]] + xfOvercome + equipOvercome + primaryOvercome)
     }
@@ -421,7 +461,7 @@ class RoleAttribute {
         return Math.round(equipParryValue + primaryParryValue)
     }
 
-    // 御劲
+    // 御劲等级
     getToughness() {
         const kungfu = this.kungfu;
         const equipToughness = this.getTotalAttr('atToughnessBase');
@@ -431,12 +471,13 @@ class RoleAttribute {
 
         return Math.round(equipToughness + primaryToughness)
     }
+    // 御劲
     getToughnessRate() {
         const cof = 9.530 * this.globalCof;
         const toughness = this.getToughness();
         return `${((toughness / cof) * 100).toFixed(2)}%`;
     }
-    // 化劲
+    // 化劲等级
     getHuajing() {
         const kungfu = this.kungfu;
         const equipHuajing = this.getTotalAttr('atDecriticalDamagePowerBase');
@@ -448,7 +489,7 @@ class RoleAttribute {
 
         return Math.round(huajing)
     }
-
+    // 化劲
     getHuajingRate() {
         const cof = 1.380 * this.globalCof;
         const huajing = this.getHuajing();

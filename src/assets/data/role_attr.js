@@ -723,6 +723,13 @@ const XF_DECORATOR = {
     ],
 }
 
+const QIXUE = {
+    'primary': [''],
+    'heal': [],
+    'atVitalityBase': [],
+    'haste': []
+}
+
 export {
     PRE_DEFINED_EMBED_VALUES,
     VALUE_MAP,
