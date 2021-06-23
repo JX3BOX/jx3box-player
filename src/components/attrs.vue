@@ -19,6 +19,7 @@ import { __dataPath } from '@jx3box/jx3box-common/data/jx3box.json'
 import axios from 'axios';
 // import enchants from '@/assets/data/enchants.json'
 import RoleAttribute from '@/service/attr.js';
+import { XF_FACTOR } from '@/assets/data/role_attr'
 export default {
     name: "Attrs",
     props: ["data"],
@@ -26,11 +27,7 @@ export default {
         return {
             results: [],
             displayNames: [
-                "atVitalityBase",
-                "atSpiritBase",
-                "atStrengthBase",
-                "atAgilityBase",
-                "atSpunkBase"
+                // "atVitalityBase",
             ],
             // enchants,
             roleAttr: null
@@ -41,16 +38,21 @@ export default {
     methods: {
         init: function() {
             this.roleAttr = new RoleAttribute(this.data.Equips, this.data.Kungfu, this.data.Person);
-            const { results, displayNames } = this
+            const { results, displayNames } = this;
+
+            displayNames.push(XF_FACTOR[this.data.Kungfu.KungfuID]['primaryAttr'])
 
             displayNames.forEach(key => {
                 results.push({ key, val: this.roleAttr.getTotalAttr(key) })
             })
-            
-            // const physicsAttack = getAttack([this.data.Equips, this.data.Kungfu])
-            const physicsAttack = this.roleAttr.getAttack()
 
-            results.push({ key: 'atPhysicsAttackPowerBase', val: physicsAttack });
+            // const physicsAttack = getAttack([this.data.Equips, this.data.Kungfu])
+            const baseAttack = this.roleAttr.getBaseAttack();
+            results.push({ key: '基础攻击', val: baseAttack });
+
+            const attack = this.roleAttr.getAttack()
+
+            results.push({ key: '面板攻击', val: attack });
 
             // const critRate = getCritRate(this.data.Equips, this.data.Kungfu);
             const critRate = this.roleAttr.getCritRate();
@@ -80,31 +82,31 @@ export default {
             const strain = this.roleAttr.getStrain();
 
             results.push({ key: '无双等级', val: strain })
-            
+
             const strainRate = this.roleAttr.getStrainRate();
 
             results.push({ key: 'atStrainBase', val: strainRate })
-            
+
             const surplus = this.roleAttr.getSurplus();
 
             results.push({ key: 'atSurplusValueBase', val: surplus });
-            
+
             const health = this.roleAttr.getHealth();
 
             results.push({ key: '气血', val: health });
-            
+
             const physicsShield = this.roleAttr.getPhysicsShield();
 
             results.push({ key: '外防等级', val: physicsShield });
-            
+
             const physicsShieldRate = this.roleAttr.getPhysicsShieldRate();
 
             results.push({ key: '外功防御', val: physicsShieldRate });
-            
+
             const magicShield = this.roleAttr.getMagicShield();
 
             results.push({ key: '内防等级', val: magicShield });
-            
+
             const magicShieldRate = this.roleAttr.getMagicShieldRate();
 
             results.push({ key: '内功防御', val: magicShieldRate });

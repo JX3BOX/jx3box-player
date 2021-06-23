@@ -1,10 +1,3 @@
-const BASE = {
-    atVitalityBase: 38, // 体质
-    atSpunkBase: 37, // 元气
-    atSpiritBase: 38, // 根骨
-    atStrengthBase: 37, // 力道
-    atAgilityBase: 38, // 身法
-}
 // 五行石孔等级对应数值
 const PRE_DEFINED_EMBED_VALUES = {
     defense: [6, 12, 18, 24, 30, 36, 48, 62],
@@ -135,7 +128,7 @@ const XF_FACTOR = {
         overcomeType: 'atNeutralOvercomeBase'
     },
     '10026': { // 傲血战意
-        attack: 1.6, 
+        attack: 1.6,
         overcome: 0.25,
         base: {
             health_override: 1.22,
@@ -233,7 +226,7 @@ const XF_FACTOR = {
         overcomeType: 'atPoisonOvercomeBase'
     },
     '10224': { // 惊羽诀
-        attack: 1.45, 
+        attack: 1.45,
         crit: 0.59,
         base: {
             health_override: 1.22,
@@ -284,7 +277,7 @@ const XF_FACTOR = {
         overcomeType: 'atSolarAndLunarOvercomeBase'
     },
     '10268': { // 笑尘诀
-        attack: 1.5, 
+        attack: 1.5,
         overcome: 0.47,
         base: {
             health_override: 1.22,
@@ -335,7 +328,7 @@ const XF_FACTOR = {
         overcomeType: 'atLunarOvercomeBase'
     },
     '10464': { // 北傲诀
-        attack: 1.55, 
+        attack: 1.55,
         overcome: 0.36,
         base: {
             health_override: 1.22,
@@ -546,7 +539,7 @@ const XF_DECORATOR = {
         ["critEffect", "MAGIC"],
         ["overcome", "MAGIC"]
     ],
-    "10015": [ // 太虚剑意 
+    "10015": [ // 太虚剑意
         ["attack", "PHYSICS"],
         ["hit", "PHYSICS"],
         ["crit", "PHYSICS"],
@@ -724,9 +717,10 @@ const XF_DECORATOR = {
 }
 
 const QIXUE = {
-    'primary': [''],
+    'primary': ['6566', '21285', '14903', '6822', '16728', '22583', '25066'], // 七秀霜风 傲血关山月 分山活脉 笑尘贞固 北傲星火 隐龙王师 太玄神元
+    'health': ['5930', '6898'], // 易筋经明王身 明尊超凡
     'heal': [],
-    'atVitalityBase': [],
+    'atVitality': ['6566', '21285', '14903', '13124', '6822', '16728', '25066'], // 七秀霜风 傲血关山月 分山活脉 铁骨活血 笑尘贞固 北傲星火 太玄神元
     'haste': []
 }
 
@@ -734,5 +728,6 @@ export {
     PRE_DEFINED_EMBED_VALUES,
     VALUE_MAP,
     XF_DECORATOR,
-    XF_FACTOR
+    XF_FACTOR,
+    QIXUE
 }
