@@ -1,15 +1,19 @@
 import {getGrowScore} from './gs';
-import {PRE_DEFINED_EMBED_VALUES, QIXUE, VALUE_MAP, XF_DECORATOR, XF_FACTOR} from '@/assets/data/role_attr'
+import {PRE_DEFINED_EMBED_VALUES, QIXUE, VALUE_MAP, XF_DECORATOR, XF_FACTOR, ENCHANTS} from '@/assets/data/role_attr'
 
 class RoleAttribute {
-    constructor(equips, kungfu, person) {
+    constructor(equips, kungfu, person, set) {
         this.globalCof = 205 * 110 - 18800;
 
         this.equips = equips || [];
         this.kungfu = kungfu || {};
         this.person = person || {};
+        this.set = set || {};
 
-        this.qiXueId = this.person.qiXueId.join(',')
+        this.qiXueId = this.person.qiXueId.join(',');
+
+        // 套装
+        this.SET = {};
 
         this.BASE = {
             atVitalityBase: Number(person.atVitalityBase), // 体质
@@ -18,13 +22,38 @@ class RoleAttribute {
             atStrengthBase: Number(person.atStrengthBase), // 力道
             atAgilityBase: Number(person.atAgilityBase), // 身法
         };
-        // 套装
-        this.SET = {};
+
+        this.initBase()
 
         this.primaryAttr = XF_FACTOR[kungfu.KungfuID]['primaryAttr'];
         this.primaryAttrVal = this.getTotalAttr(this.primaryAttr);
     }
-
+    // 初始化基础属性
+    initBase() {
+        this.equips.forEach(equip => {
+            if (equip.SetID && equip.Set) {
+                if (!this.SET[equip.SetID]) this.SET[equip.SetID] = equip.Set;
+            }
+        })
+        let baseVal = 0;
+        // XXX: 冬至套装会增加基础属性
+        for (const [key, value] of Object.entries(this.SET)) {
+            value.forEach(val => {
+                if (val.Desc === 'atBasePotentialAdd') {
+                    if (this.set[key] > 1) {
+                        baseVal = Number(val.Param1Max) || 0;
+                    }
+                }
+            })
+        }
+        for (const b in this.BASE) {
+            console.log(b)
+            if (this.BASE.hasOwnProperty(b)) {
+                this.BASE[b] += baseVal
+            }
+        }
+    }
+    // 五彩石属性加成
     getFiveStoneAttr([attr, decorator], level) {
         if (level > 0) {
             if (attr === 'attack') {
@@ -64,20 +93,20 @@ class RoleAttribute {
             const decorator = attr.includes('Physics') ? 'PHYSICS': 'MAGIC';
             const fiveStoneAttr = this.getFiveStoneAttr([ attackAttr, decorator ], (fiveStone && fiveStone.Level) || 0);
 
-            // 五彩石
+            // 五彩石 TODO 五彩石未激活情况未考虑
             const [ colorStone ] = equip.ColorStone ? equip.ColorStone.Attributes.filter(c => c.Desc === attr) : [];
             const colorStoneAttr = Number(colorStone && colorStone.Attribute1Value1) || 0;
 
             // 附魔
+
             const [ enchant ] = equip.WPermanentEnchant ?
                 equip.WPermanentEnchant.Attributes.filter(w => w.Desc === attr) : [];
-
-            // 大附魔 todo
+            
+            const enchantAttr = Number(enchant && enchant.Attribute1Value1) || 0;
 
             // 切糕效果
             let setAttr = 0;
             if (equip.SetID && equip.Set) {
-                if (!this.SET[equip.SetID]) this.SET[equip.SetID] = equip.Set;
 
                 if (!SETNUM[equip.SetID]) {
                     SETNUM[equip.SetID] = 1;
@@ -95,8 +124,6 @@ class RoleAttribute {
                 }
             }
 
-            const enchantAttr = Number(enchant && enchant.Attribute1Value1) || 0;
-
             equipAttr += baseAttr + growthBase + growthAttr + fiveStoneAttr + colorStoneAttr + enchantAttr + setAttr;
         });
 
@@ -108,10 +135,8 @@ class RoleAttribute {
                 break;
             }
         }
-
+        // 基础属性
         const xfAttr = this.BASE[attr] || 0;
-
-        // console.log(qixue)
 
         if (['primary', 'atVitality'].includes(qixue) && (attr === this.primaryAttr || attr === 'atVitalityBase')) {
             return Math.floor((xfAttr + equipAttr) * (1 + 102 / 1024));
@@ -144,22 +169,43 @@ class RoleAttribute {
         // 具体攻击类型
         const attackType = XF_FACTOR[kungfu.KungfuID]['attackType'];
 
-        // 大附魔 todo
-        // 七秀剑舞buff
+        // 大附魔 只有衣服加攻击 UcPos3
+        let wtAttr = 0;
+        const WTemporary = this.equips.find(equip => equip.UcPos === '3');
+
+        if (WTemporary.WTemporaryEnchant) {
+            const wtEnchantName = WTemporary.WTemporaryEnchant.Name
+            if (decorator[1] === 'PHYSICS') {
+                wtAttr = ENCHANTS[wtEnchantName] ? ENCHANTS[wtEnchantName][1] : 0
+            } else if (decorator[1] === 'MAGIC') {
+                wtAttr = ENCHANTS[wtEnchantName] ? ENCHANTS[wtEnchantName][0] : 0
+            }
+        }
+        
 
         // 装备攻击
         let equipAttack;
 
         if (decorator[1] === 'MAGIC') {
-            console.log('magic', this.getTotalAttr(attackType), this.getTotalAttr('atMagicAttackPowerBase'))
             equipAttack = this.getTotalAttr(attackType) + this.getTotalAttr('atMagicAttackPowerBase');
         } else {
             equipAttack = this.getTotalAttr(attackType);
         }
 
-        // console.log('baseAttack', decoratedAttack[decorator[1]]+xfAttack+equipAttack)
+        // console.log('baseAttack', decoratedAttack[decorator[1]], xfAttack, equipAttack)
 
-        return decoratedAttack[decorator[1]] + xfAttack + equipAttack;
+        // 七秀剑舞 朝露 XXX hard code
+        if (this.kungfu.KungfuID === '10081') {
+            let isZhaolu = 0;
+            // console.log(this.person.qixueList.map(q => q.skill_id).some(_q => _q === '6779'))
+            if (this.person && this.person.qixueList.length) {
+                isZhaolu = this.person.qixueList.map(q => q.skill_id).some(_q => _q === '6779') ? 10/1024 : 0
+            }
+            
+            return Math.floor((decoratedAttack[decorator[1]] + xfAttack + equipAttack + wtAttr) * (1 + (31 / 1024 +  + isZhaolu) * 10));
+        }
+
+        return Math.floor(decoratedAttack[decorator[1]] + xfAttack + equipAttack + wtAttr);
     }
 
     /**
@@ -171,7 +217,7 @@ class RoleAttribute {
 
         // console.log('attack', this.getBaseAttack(), primaryAttack)
 
-        return Math.round(this.getBaseAttack() + primaryAttack);
+        return Math.floor(this.getBaseAttack() + primaryAttack);
     }
     /**
      * 会心等级 = 身法/根骨加成 + 心法基础会心 + 装备会心 + 主属性会心加成
@@ -213,9 +259,9 @@ class RoleAttribute {
         // 心法加成会心等级
         const primaryCrit = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['crit'] || 0);
 
-        console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
+        // console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
 
-        console.log(Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit))
+        // console.log(Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit))
 
         return Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit);
     }
@@ -224,6 +270,7 @@ class RoleAttribute {
     getCritRate() {
         // 如果心法为鲸鱼或者田螺
         const flag = Number(['10224', '10225'].includes(this.kungfu.KungfuID));
+
         const cof = (9.530 * this.globalCof) / 100;
         return `${(this.getCrit() / cof + flag).toFixed(2)}%`;
     }
@@ -255,7 +302,8 @@ class RoleAttribute {
         // 装备全会效
         const allEquipCritEffect = this.getTotalAttr('atAllTypeCriticalDamagePowerBase');
 
-        const primaryCritEffect = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['critEffect'] || 0)
+        // 心法会效加成
+        const primaryCritEffect = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['critEffect'] || 0);
 
         // console.log(xfCritEffect, equipCritEffect, allEquipCritEffect, primaryCritEffect)
 
@@ -311,6 +359,19 @@ class RoleAttribute {
         // 具体破防类型
         const overcomeType = XF_FACTOR[kungfu.KungfuID]['overcomeType'];
 
+        // 大附魔破防
+        let wtAttr = 0;
+        const WTemporary = this.equips.find(equip => equip.UcPos === '4');
+
+        if (WTemporary.WTemporaryEnchant) {
+            const wtEnchantName = WTemporary.WTemporaryEnchant.Name
+            if (decorator[1] === 'PHYSICS') {
+                wtAttr = ENCHANTS[wtEnchantName] ? ENCHANTS[wtEnchantName][1] : 0
+            } else if (decorator[1] === 'MAGIC') {
+                wtAttr = ENCHANTS[wtEnchantName] ? ENCHANTS[wtEnchantName][0] : 0
+            }
+        }
+
         // 装备破防
         let equipOvercome;
 
@@ -325,7 +386,7 @@ class RoleAttribute {
 
         // console.log(decoratedOvercome[decorator[1]], xfOvercome, equipOvercome, primaryOvercome)
 
-        return Math.round(decoratedOvercome[decorator[1]] + xfOvercome + equipOvercome + primaryOvercome)
+        return Math.floor(decoratedOvercome[decorator[1]] + xfOvercome + equipOvercome + primaryOvercome + wtAttr)
     }
     // 破防
     getOvercomeRate() {
@@ -371,10 +432,10 @@ class RoleAttribute {
 
         const equipHealth = this.getTotalAttr('atMaxLifeAdditional');
 
-        const primaryHealth = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['health'] || 0)
+        const primaryHealth = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['health'] || 0);
 
         const health = (this.getTotalAttr('atVitalityBase') * 10 + 23766) * cof
-            + primaryHealth + equipHealth
+            + primaryHealth + equipHealth;
 
         return Math.floor(health);
     }
@@ -386,7 +447,12 @@ class RoleAttribute {
         const equipPhysicsShield = this.getTotalAttr('atPhysicsShieldBase');
 
         // 主属性加成外防
-        const primaryPhysicsShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['physicsShield_addtional'] || 0)
+        const primaryPhysicsShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['physicsShield_addtional'] || 0);
+
+        console.log(XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'], equipPhysicsShield
+            , primaryPhysicsShield
+            , (XF_FACTOR[kungfu.KungfuID]['physicsShield'] || 0)
+        )
 
         return XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'] + equipPhysicsShield
             + primaryPhysicsShield
@@ -407,7 +473,11 @@ class RoleAttribute {
         const equipMagicShield = this.getTotalAttr('atMagicShield');
 
         // 主属性内防加成
-        const primaryMagicShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['magicShield_addtional'] || 0)
+        const primaryMagicShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['magicShield_addtional'] || 0);
+
+        console.log(XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
+        + primaryMagicShield
+        + (XF_FACTOR[kungfu.KungfuID]['magicShield'] || 0))
 
 
         return XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
@@ -499,6 +569,32 @@ class RoleAttribute {
         const cof = 1.380 * this.globalCof;
         const huajing = this.getHuajing();
         return `${((huajing / (cof + huajing)) * 100).toFixed(2)}%`;
+    }
+
+    // 疗效
+    getBaseHeal() {
+        const kungfu = this.kungfu;
+        const equipHeal = this.getTotalAttr('atTherapyPowerBase');
+
+        // 心法基础疗伤成效
+        const [healDecorator] = Object.keys(kungfu.Attrib).filter(o => o.includes('atTherapyPowerBase'));
+        const xfHeal = Number(kungfu.Attrib[healDecorator]) || 0;
+
+        // 七秀剑舞 如果是云裳心经
+        if (this.kungfu.KungfuID === '10080') {
+            return Math.round((equipHeal + xfHeal) * (1 + 31 / 1024 * 10));
+        }
+
+        return Math.round(equipHeal + xfHeal)
+    }
+
+    // 疗效
+    getHeal() {
+        const primaryHeal = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['heal'] || 0);
+
+        // console.log('primaryHeal', this.getBaseHeal(), this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['heal'] || 0))
+
+        return Math.round(this.getBaseHeal() + primaryHeal);
     }
 
 }

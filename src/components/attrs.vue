@@ -29,7 +29,6 @@ export default {
             displayNames: [
                 // "atVitalityBase",
             ],
-            // enchants,
             roleAttr: null
         };
     },
@@ -37,95 +36,28 @@ export default {
     },
     methods: {
         init: function() {
-            this.roleAttr = new RoleAttribute(this.data.Equips, this.data.Kungfu, this.data.Person);
-            const { results, displayNames } = this;
+            this.roleAttr = new RoleAttribute(this.data.Equips, this.data.Kungfu, this.data.Person, this.data.Set);
+            const primaryAttr = XF_FACTOR[this.data.Kungfu.KungfuID]['primaryAttr'];
 
-            displayNames.push(XF_FACTOR[this.data.Kungfu.KungfuID]['primaryAttr'])
-
-            displayNames.forEach(key => {
-                results.push({ key, val: this.roleAttr.getTotalAttr(key) })
-            })
-
-            // const physicsAttack = getAttack([this.data.Equips, this.data.Kungfu])
-            const baseAttack = this.roleAttr.getBaseAttack();
-            results.push({ key: '基础攻击', val: baseAttack });
-
-            const attack = this.roleAttr.getAttack()
-
-            results.push({ key: '面板攻击', val: attack });
-
-            // const critRate = getCritRate(this.data.Equips, this.data.Kungfu);
-            const critRate = this.roleAttr.getCritRate();
-
-            results.push({ key: '会心', val: critRate });
-
-            const critEffect = this.roleAttr.getCritEffectRate();
-
-            results.push({ key: '会效', val: critEffect });
-
-            const haste = this.roleAttr.getHaste();
-
-            results.push({ key: 'atHasteBase', val: haste });
-
-            const hasteRate = this.roleAttr.getHasteRate();
-
-            results.push({ key: 'atHasteBasePercentAdd', val: hasteRate });
-
-            const overcome = this.roleAttr.getOvercome();
-
-            results.push({ key: '破防等级', val: overcome });
-
-            const overcomeRate = this.roleAttr.getOvercomeRate();
-
-            results.push({ key: '破防', val: overcomeRate })
-
-            const strain = this.roleAttr.getStrain();
-
-            results.push({ key: '无双等级', val: strain })
-
-            const strainRate = this.roleAttr.getStrainRate();
-
-            results.push({ key: 'atStrainBase', val: strainRate })
-
-            const surplus = this.roleAttr.getSurplus();
-
-            results.push({ key: 'atSurplusValueBase', val: surplus });
-
-            const health = this.roleAttr.getHealth();
-
-            results.push({ key: '气血', val: health });
-
-            const physicsShield = this.roleAttr.getPhysicsShield();
-
-            results.push({ key: '外防等级', val: physicsShield });
-
-            const physicsShieldRate = this.roleAttr.getPhysicsShieldRate();
-
-            results.push({ key: '外功防御', val: physicsShieldRate });
-
-            const magicShield = this.roleAttr.getMagicShield();
-
-            results.push({ key: '内防等级', val: magicShield });
-
-            const magicShieldRate = this.roleAttr.getMagicShieldRate();
-
-            results.push({ key: '内功防御', val: magicShieldRate });
-
-            const parryBaseRate = this.roleAttr.getParryBaseRate();
-
-            results.push({ key: '招架', val: parryBaseRate });
-
-            const parryValue = this.roleAttr.getParryValue();
-
-            results.push({ key: '拆招', val: parryValue });
-
-            const toughnessRate = this.roleAttr.getToughnessRate();
-
-            results.push({ key: '御劲', val: toughnessRate });
-
-            const huajing = this.roleAttr.getHuajingRate();
-
-            results.push({ key: '化劲', val: huajing });
+            this.results = [
+                { key: XF_FACTOR[this.data.Kungfu.KungfuID]['primaryAttr'], val: this.roleAttr.getTotalAttr(primaryAttr) },
+                { key: '攻击', val: `${this.roleAttr.getAttack()}(${ this.roleAttr.getBaseAttack()})` },
+                { key: '会心', val: `${this.roleAttr.getCritRate()}(${this.roleAttr.getCrit()})` },
+                { key: '会效', val: this.roleAttr.getCritEffectRate() },
+                { key: 'atHasteBasePercentAdd', val: `${this.roleAttr.getHasteRate()}(${this.roleAttr.getHaste()})` },
+                { key: '破防', val: `${this.roleAttr.getOvercomeRate()}(${this.roleAttr.getOvercome()})` },
+                { key: '无双', val: `${this.roleAttr.getStrainRate()}(${this.roleAttr.getStrain()})` },
+                { key: 'atSurplusValueBase', val: this.roleAttr.getSurplus() },
+                { key: '气血', val: this.roleAttr.getHealth() },
+                { key: '外功防御', val: this.roleAttr.getPhysicsShieldRate() },
+                { key: '内功防御', val: this.roleAttr.getMagicShieldRate() },
+                { key: '招架', val: this.roleAttr.getParryBaseRate() },
+                { key: '拆招', val: this.roleAttr.getParryValue() },
+                { key: '御劲', val: this.roleAttr.getToughnessRate() },
+                { key: '化劲', val: this.roleAttr.getHuajingRate() },
+                { key: '闪躲', val: `${this.roleAttr.getDodgeRate()}(${this.roleAttr.getDodge()})` },
+                { key: '治疗量', val: this.roleAttr.getHeal() },
+            ];
         },
     },
     filters: {

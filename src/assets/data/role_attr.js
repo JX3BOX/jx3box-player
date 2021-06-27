@@ -44,6 +44,14 @@ const VALUE_MAP = {
     atSolarOvercomeBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 阳性破防
 
     atPhysicsCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 外功会效
+    atMagicCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 内功会效
+    atNeutralCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 混元内功会效
+    atPoisonCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 毒性会效
+    atSolarAndLunarCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 阴阳会效
+    atLunarCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 阴会效
+    atSolarCriticalDamagePowerBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 阳会效
+
+    atTherapyPowerBase: [5, 11, 17, 23, 29, 35, 46, 60], // 治疗量
 
     hit: PRE_DEFINED_EMBED_VALUES.secondaryAttribute,
     atStrainBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 无双
@@ -302,6 +310,7 @@ const XF_FACTOR = {
             physicsShield: 400,
             magicShield: 400
         },
+        huajing: 1725,
         primaryAttr: 'atAgilityBase',
         attackType: 'atPhysicsAttackPowerBase',
         critType: 'atPhysicsCriticalStrike',
@@ -724,10 +733,19 @@ const QIXUE = {
     'haste': []
 }
 
+const ENCHANTS = {
+    '山市鬼冢·伤·衣': [291, 243],
+    '山市鬼船·伤·衣': [357, 298],
+    '山市鬼冢·伤·帽': [406, 406],
+    '山市鬼船·伤·帽': [496, 496],
+
+}
+
 export {
     PRE_DEFINED_EMBED_VALUES,
     VALUE_MAP,
     XF_DECORATOR,
     XF_FACTOR,
-    QIXUE
+    QIXUE,
+    ENCHANTS
 }
