@@ -47,7 +47,6 @@ class RoleAttribute {
             })
         }
         for (const b in this.BASE) {
-            console.log(b)
             if (this.BASE.hasOwnProperty(b)) {
                 this.BASE[b] += baseVal
             }
@@ -183,11 +182,18 @@ class RoleAttribute {
         }
         
 
-        // 装备攻击
+        // 装备攻击 需要额外计算五彩石阴阳属性
         let equipAttack;
 
         if (decorator[1] === 'MAGIC') {
             equipAttack = this.getTotalAttr(attackType) + this.getTotalAttr('atMagicAttackPowerBase');
+            if (attackType === 'atLunarAttackPowerBase' || attackType === 'atSolarAttackPowerBase') {
+                equipAttack += this.getTotalAttr('atSolarAndLunarAttackPowerBase');
+            }
+            if (attackType === 'atSolarAndLunarAttackPowerBase') {
+                equipAttack += this.getTotalAttr('atLunarAttackPowerBase') + this.getTotalAttr('atSolarAttackPowerBase');
+            }
+            console.log('MAGIC',this.getTotalAttr(attackType), this.getTotalAttr('atMagicAttackPowerBase'))
         } else {
             equipAttack = this.getTotalAttr(attackType);
         }
@@ -409,7 +415,7 @@ class RoleAttribute {
     }
     // 无双率
     getStrainRate() {
-        const strain = this.getStrain()
+        const strain = this.getStrain();
         const cof = (9.189 * this.globalCof) / 100;
         return `${(strain / cof).toFixed(2)}%`;
     }
@@ -449,10 +455,10 @@ class RoleAttribute {
         // 主属性加成外防
         const primaryPhysicsShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['physicsShield_addtional'] || 0);
 
-        console.log(XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'], equipPhysicsShield
+        /* console.log(XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'], equipPhysicsShield
             , primaryPhysicsShield
             , (XF_FACTOR[kungfu.KungfuID]['physicsShield'] || 0)
-        )
+        ) */
 
         return XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'] + equipPhysicsShield
             + primaryPhysicsShield
@@ -475,9 +481,9 @@ class RoleAttribute {
         // 主属性内防加成
         const primaryMagicShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['magicShield_addtional'] || 0);
 
-        console.log(XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
+        /* console.log(XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
         + primaryMagicShield
-        + (XF_FACTOR[kungfu.KungfuID]['magicShield'] || 0))
+        + (XF_FACTOR[kungfu.KungfuID]['magicShield'] || 0)) */
 
 
         return XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
@@ -498,9 +504,11 @@ class RoleAttribute {
         const equipDodge = this.getTotalAttr('atDodge');
 
         // 主属性闪躲加成
-        const primaryDodge = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0);
+        const primaryDodge = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['dodge_addtional'] || 0);
 
-        return Math.round(equipDodge + primaryDodge)
+        // console.log('dodge', primaryDodge, equipDodge)
+
+        return Math.round(equipDodge + primaryDodge + (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0))
     }
     // 闪躲率
     getDodgeRate() {
@@ -560,7 +568,7 @@ class RoleAttribute {
         // 主属性
         const primaryHuajing = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['huajing_addtional'] || 0)
 
-        const huajing = XF_FACTOR[kungfu.KungfuID]['huajing'] + equipHuajing + primaryHuajing;
+        const huajing = (XF_FACTOR[kungfu.KungfuID]['huajing'] || 0) + equipHuajing + primaryHuajing;
 
         return Math.round(huajing)
     }
@@ -585,7 +593,7 @@ class RoleAttribute {
             return Math.round((equipHeal + xfHeal) * (1 + 31 / 1024 * 10));
         }
 
-        return Math.round(equipHeal + xfHeal)
+        return Math.round(equipHeal + xfHeal);
     }
 
     // 疗效

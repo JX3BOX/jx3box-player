@@ -494,8 +494,9 @@ const XF_FACTOR = {
     '10243': { // 明尊琉璃体
         health: 1.25,
         attack: 0.05,
-        parryBase: 0.1,
-        dodge: 0.225,
+        // parryBase: 0.1,
+        dodge_addtional: 0.225,
+        dodge: 914,
         base: {
             health_override: 1.22,
             physicsShield: 400,
