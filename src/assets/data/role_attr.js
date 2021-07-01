@@ -18,9 +18,10 @@ const VALUE_MAP = {
     atAgilityBase: PRE_DEFINED_EMBED_VALUES.primaryAttribute,
 
     // SecondaryAttribute
-    physicsShield: PRE_DEFINED_EMBED_VALUES.defense,
-    magicShield: PRE_DEFINED_EMBED_VALUES.defense,
-    dodge: PRE_DEFINED_EMBED_VALUES.defense,
+    atPhysicsShieldAdditional: PRE_DEFINED_EMBED_VALUES.defense,
+    atPhysicsShield: PRE_DEFINED_EMBED_VALUES.defense,
+    atMagicShield: PRE_DEFINED_EMBED_VALUES.defense,
+    atDodge: PRE_DEFINED_EMBED_VALUES.defense,
     parryBase: PRE_DEFINED_EMBED_VALUES.defense,
     parryValue: [34, 69, 104, 139, 174, 208, 278, 359],
     toughness: PRE_DEFINED_EMBED_VALUES.defense,
@@ -57,7 +58,7 @@ const VALUE_MAP = {
     atStrainBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 无双
     atSurplusValueBase: PRE_DEFINED_EMBED_VALUES.secondaryAttribute, // 破招
     haste: PRE_DEFINED_EMBED_VALUES.secondaryAttribute,
-    threat: [0.9, 1.8, 2.6, 3.5, 4.4, 5.3, 7.1, 9.2],
+    atActiveThreatCoefficient: [0.9, 1.8, 2.6, 3.5, 4.4, 5.3, 7.1, 9.2], // 招式产生威胁
     huajing: PRE_DEFINED_EMBED_VALUES.defense,
     // ExtraAttribute
     atMaxLifeAdditional: PRE_DEFINED_EMBED_VALUES.healthMana,
@@ -471,6 +472,11 @@ const XF_FACTOR = {
         physicsShield: 548,
         magicShield: 914,
         magicShield_addtional: 0.1,
+        primaryAttr: 'atVitalityBase',
+        attackType: 'atSolarAttackPowerBase',
+        critType: 'atSolarCriticalStrike',
+        critEffectType: 'atSolarCriticalDamagePowerBase',
+        overcomeType: 'atSolarOvercomeBase'
     },
     '10062': { // 铁牢律
         health: 1.5,
@@ -728,8 +734,9 @@ const XF_DECORATOR = {
 
 const QIXUE = {
     'primary': ['6566', '21285', '14903', '6822', '16728', '22583', '25066'], // 七秀霜风 傲血关山月 分山活脉 笑尘贞固 北傲星火 隐龙王师 太玄神元
-    'health': ['5930', '6898'], // 易筋经明王身 明尊超凡
+    'health': ['5930', '6898', '5695'], // 易筋经明王身 明尊超凡 铁牢望西京
     'heal': [],
+    'shield': ['5679', '5921'], // 天策勤王 洗髓生缘
     'atVitality': ['6566', '21285', '14903', '13124', '6822', '16728', '25066'], // 七秀霜风 傲血关山月 分山活脉 铁骨活血 笑尘贞固 北傲星火 太玄神元
     'haste': []
 }

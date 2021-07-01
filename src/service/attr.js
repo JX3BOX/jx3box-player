@@ -172,7 +172,7 @@ class RoleAttribute {
         let wtAttr = 0;
         const WTemporary = this.equips.find(equip => equip.UcPos === '3');
 
-        if (WTemporary.WTemporaryEnchant) {
+        if (WTemporary && WTemporary.WTemporaryEnchant) {
             const wtEnchantName = WTemporary.WTemporaryEnchant.Name
             if (decorator[1] === 'PHYSICS') {
                 wtAttr = ENCHANTS[wtEnchantName] ? ENCHANTS[wtEnchantName][1] : 0
@@ -203,7 +203,6 @@ class RoleAttribute {
         // 七秀剑舞 朝露 XXX hard code
         if (this.kungfu.KungfuID === '10081') {
             let isZhaolu = 0;
-            // console.log(this.person.qixueList.map(q => q.skill_id).some(_q => _q === '6779'))
             if (this.person && this.person.qixueList.length) {
                 isZhaolu = this.person.qixueList.map(q => q.skill_id).some(_q => _q === '6779') ? 10/1024 : 0
             }
@@ -369,7 +368,7 @@ class RoleAttribute {
         let wtAttr = 0;
         const WTemporary = this.equips.find(equip => equip.UcPos === '4');
 
-        if (WTemporary.WTemporaryEnchant) {
+        if (WTemporary && WTemporary.WTemporaryEnchant) {
             const wtEnchantName = WTemporary.WTemporaryEnchant.Name
             if (decorator[1] === 'PHYSICS') {
                 wtAttr = ENCHANTS[wtEnchantName] ? ENCHANTS[wtEnchantName][1] : 0
@@ -439,6 +438,25 @@ class RoleAttribute {
         const equipHealth = this.getTotalAttr('atMaxLifeAdditional');
 
         const primaryHealth = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['health'] || 0);
+        // 和尚 明王身 20% 基础气血
+        if (this.kungfu.KungfuID === '10002') {
+            let isMingwang = 0;
+            if (this.person && this.person.qixueList.length) {
+                isMingwang = this.person.qixueList.map(q => q.skill_id).some(_q => _q === '5930') ? 220/1024 : 0
+            }
+
+            // console.log(isMingwang)
+
+            // console.log('health', primaryHealth, equipHealth, (this.getTotalAttr('atVitalityBase') * 10 + 23766), cof);
+            return Math.floor(primaryHealth + equipHealth + ((this.getTotalAttr('atVitalityBase') * 10 + 23766) * (cof + isMingwang)))
+        }
+        // 其他10%基础气血的加成奇穴
+        if (this.person && this.person.qixueList.length) {
+            const skills = this.person.qixueList.map(q => q.skill_id)
+            if (QIXUE.health.some(h => skills.includes(h))) {
+                return Math.floor(primaryHealth + equipHealth + ((this.getTotalAttr('atVitalityBase') * 10 + 23766) * (cof + 102 / 1024)));
+            }
+        }
 
         const health = (this.getTotalAttr('atVitalityBase') * 10 + 23766) * cof
             + primaryHealth + equipHealth;
@@ -450,15 +468,10 @@ class RoleAttribute {
     getPhysicsShield() {
         const kungfu = this.kungfu;
         // 装备外防
-        const equipPhysicsShield = this.getTotalAttr('atPhysicsShieldBase');
+        const equipPhysicsShield = this.getTotalAttr('atPhysicsShieldBase') + this.getTotalAttr('atPhysicsShieldAdditional');
 
         // 主属性加成外防
         const primaryPhysicsShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['physicsShield_addtional'] || 0);
-
-        /* console.log(XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'], equipPhysicsShield
-            , primaryPhysicsShield
-            , (XF_FACTOR[kungfu.KungfuID]['physicsShield'] || 0)
-        ) */
 
         return XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'] + equipPhysicsShield
             + primaryPhysicsShield
