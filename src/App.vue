@@ -21,17 +21,17 @@ export default {
             // playerId: "33146204",  //藏剑
             // playerId: "33154610",  //醉栩蓬莱
             // playerId: "17806618",  //醉栩天策
-            playerId: "32287076",  //牧空和尚
-            // playerId: "10537412",  //醉栩苍云
+            // playerId: "32287076",  //牧空和尚
+            playerId: "10537412",  //醉栩苍云
             // playerId: "5291324",  //醉栩明教 闪躲还有一点问题
             // playerId: "17217706",  //醉栩凌雪
             // playerId: "2382163",  //yyz
             // playerId: "31346115",  //凉子奶毒
             // playerId: "13525363",  // 凉子七秀
             // playerId: "31864485",  // 子璇七秀
-            server: '蝶恋花',
+            // server: '蝶恋花',
             // server: '唯我独尊',
-            // server: '斗转星移',
+            server: '斗转星移',
 
             // playerId: "21041450",
             // server: "唯我独尊",

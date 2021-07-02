@@ -3,11 +3,13 @@ import {PRE_DEFINED_EMBED_VALUES, QIXUE, VALUE_MAP, XF_DECORATOR, XF_FACTOR, ENC
 
 class RoleAttribute {
     constructor(equips, kungfu, person, set) {
+        // 全局参数 - 意义不明
         this.globalCof = 205 * 110 - 18800;
-
+        // 装备 心法 人物属性奇穴
         this.equips = equips || [];
         this.kungfu = kungfu || {};
         this.person = person || {};
+        // 套装符合个数 { key: value }
         this.set = set || {};
 
         this.qiXueId = this.person.qiXueId.join(',');
@@ -52,7 +54,7 @@ class RoleAttribute {
             }
         }
     }
-    // 五彩石属性加成
+    // 五彩石属性加成 需要单独维护 PRE_DEFINED_EMBED_VALUES 和 VALUE_MAP
     getFiveStoneAttr([attr, decorator], level) {
         if (level > 0) {
             if (attr === 'attack') {
@@ -186,14 +188,19 @@ class RoleAttribute {
         let equipAttack;
 
         if (decorator[1] === 'MAGIC') {
+            // 区分一下阴阳内功
             equipAttack = this.getTotalAttr(attackType) + this.getTotalAttr('atMagicAttackPowerBase');
+
             if (attackType === 'atLunarAttackPowerBase' || attackType === 'atSolarAttackPowerBase') {
+                // 当攻击类型为阴性或者阳性攻击时，需要额外加上阴阳攻击类型
                 equipAttack += this.getTotalAttr('atSolarAndLunarAttackPowerBase');
             }
             if (attackType === 'atSolarAndLunarAttackPowerBase') {
+                // 当攻击类型为阴阳攻击时，需要额外加上阴性和阳性攻击
                 equipAttack += this.getTotalAttr('atLunarAttackPowerBase') + this.getTotalAttr('atSolarAttackPowerBase');
             }
-            console.log('MAGIC',this.getTotalAttr(attackType), this.getTotalAttr('atMagicAttackPowerBase'))
+
+            // console.log('MAGIC',this.getTotalAttr(attackType), this.getTotalAttr('atMagicAttackPowerBase'))
         } else {
             equipAttack = this.getTotalAttr(attackType);
         }
@@ -438,21 +445,18 @@ class RoleAttribute {
         const equipHealth = this.getTotalAttr('atMaxLifeAdditional');
 
         const primaryHealth = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['health'] || 0);
+
         // 和尚 明王身 20% 基础气血
         if (this.kungfu.KungfuID === '10002') {
             let isMingwang = 0;
             if (this.person && this.person.qixueList.length) {
-                isMingwang = this.person.qixueList.map(q => q.skill_id).some(_q => _q === '5930') ? 220/1024 : 0
+                isMingwang = this.person.qixueList.map(q => q.skill_id).some(_q => _q === '5930') ? 220/1024 : 0;
             }
-
-            // console.log(isMingwang)
-
-            // console.log('health', primaryHealth, equipHealth, (this.getTotalAttr('atVitalityBase') * 10 + 23766), cof);
             return Math.floor(primaryHealth + equipHealth + ((this.getTotalAttr('atVitalityBase') * 10 + 23766) * (cof + isMingwang)))
         }
         // 其他10%基础气血的加成奇穴
         if (this.person && this.person.qixueList.length) {
-            const skills = this.person.qixueList.map(q => q.skill_id)
+            const skills = this.person.qixueList.map(q => q.skill_id);
             if (QIXUE.health.some(h => skills.includes(h))) {
                 return Math.floor(primaryHealth + equipHealth + ((this.getTotalAttr('atVitalityBase') * 10 + 23766) * (cof + 102 / 1024)));
             }
@@ -472,6 +476,15 @@ class RoleAttribute {
 
         // 主属性加成外防
         const primaryPhysicsShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['physicsShield_addtional'] || 0);
+
+        // 奇穴加成  天策勤王 洗髓生缘 20% 外防
+        if (this.person && this.person.qixueList.length) {
+            const skills = this.person.qixueList.map(q => q.skill_id)
+            if (QIXUE.shield.some(h => skills.includes(h))) {
+               return (XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'] + equipPhysicsShield + (XF_FACTOR[kungfu.KungfuID]['physicsShield'] || 0))
+                    * (1 + 204/1024) + primaryPhysicsShield
+            }
+        }
 
         return XF_FACTOR[kungfu.KungfuID]['base']['physicsShield'] + equipPhysicsShield
             + primaryPhysicsShield
@@ -494,9 +507,14 @@ class RoleAttribute {
         // 主属性内防加成
         const primaryMagicShield = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['magicShield_addtional'] || 0);
 
-        /* console.log(XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
-        + primaryMagicShield
-        + (XF_FACTOR[kungfu.KungfuID]['magicShield'] || 0)) */
+        // 奇穴加成  天策勤王 洗髓生缘 20% 内防
+        if (this.person && this.person.qixueList.length) {
+            const skills = this.person.qixueList.map(q => q.skill_id)
+            if (QIXUE.shield.some(h => skills.includes(h))) {
+               return ((XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] || 0) + equipMagicShield + (XF_FACTOR[kungfu.KungfuID]['magicShield'] || 0))
+                    * (1 + 204/1024) + primaryMagicShield
+            }
+        }
 
 
         return XF_FACTOR[kungfu.KungfuID]['base']['magicShield'] + equipMagicShield
@@ -519,7 +537,7 @@ class RoleAttribute {
         // 主属性闪躲加成
         const primaryDodge = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['dodge_addtional'] || 0);
 
-        // console.log('dodge', primaryDodge, equipDodge)
+        console.log('dodge', primaryDodge, equipDodge, (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0))
 
         return Math.round(equipDodge + primaryDodge + (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0))
     }
@@ -530,15 +548,17 @@ class RoleAttribute {
         return `${((dodge / (cof + dodge)) * 100).toFixed(2)}%`;
     }
 
-    // 招架
+    // 招架 针对于苍云 ，可能会有少许数值的差异
     getParryBase() {
         const kungfu = this.kungfu;
         const equipParryBase = this.getTotalAttr('atParryBase');
 
         // 主属性
-        const primaryParryBase = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['parryBase'] || 0)
+        const primaryParryBase = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['parryBase_addtional'] || 0);
 
-        return Math.round(equipParryBase + primaryParryBase)
+        console.log('parryBase', equipParryBase, primaryParryBase, (XF_FACTOR[kungfu.KungfuID]['parryBase'] || 0));
+
+        return Math.round(equipParryBase + primaryParryBase + (XF_FACTOR[kungfu.KungfuID]['parryBase'] || 0));
     }
     // 招架率
     getParryBaseRate() {
@@ -552,9 +572,9 @@ class RoleAttribute {
         const equipParryValue = this.getTotalAttr('atParryValueBase');
 
         // 主属性
-        const primaryParryValue = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['parryValue'] || 0)
+        const primaryParryValue = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['parryValue_addtional'] || 0)
 
-        return Math.round(equipParryValue + primaryParryValue)
+        return Math.round(equipParryValue + primaryParryValue + (XF_FACTOR[kungfu.KungfuID]['parryValue'] || 0))
     }
 
     // 御劲等级

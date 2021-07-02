@@ -69,21 +69,21 @@ const VALUE_MAP = {
 
 const XF_FACTOR = {
     '10003': { // 易筋经
-        attack: 1.85,
-        crit: 0.38,
+        attack: 1.85, // 攻击力
+        crit: 0.38, // 会心
         base: {
-            health_override: 1.34,
-            physicsShield: 400,
-            magicShield: 400
+            health_override: 1.34, // 基础气血加成
+            physicsShield: 400, // 外防
+            magicShield: 400 // 内防
         },
-        huajing: 1725,
-        physicsShield: 265,
-        magicShield: 312,
-        primaryAttr: 'atSpunkBase',
-        attackType: 'atSolarAttackPowerBase',
-        critType: 'atSolarCriticalStrike',
-        critEffectType: 'atSolarCriticalDamagePowerBase',
-        overcomeType: 'atSolarOvercomeBase'
+        huajing: 1725, // 化劲
+        physicsShield: 265, // 外防
+        magicShield: 312, // 内防
+        primaryAttr: 'atSpunkBase', // 主属性
+        attackType: 'atSolarAttackPowerBase', // 攻击属性
+        critType: 'atSolarCriticalStrike', // 会心类型
+        critEffectType: 'atSolarCriticalDamagePowerBase', // 会效类型
+        overcomeType: 'atSolarOvercomeBase' // 破防类型
     },
     "10014": { // 紫霞功
         attack: 1.75,
@@ -121,7 +121,7 @@ const XF_FACTOR = {
     },
     '10021': { // 花间游
         attack: 1.95,
-        overcome: 0.19,
+        overcome: 0.19, // 破防
         base: {
             health_override: 1.22,
             physicsShield: 400,
@@ -471,7 +471,8 @@ const XF_FACTOR = {
         },
         physicsShield: 548,
         magicShield: 914,
-        magicShield_addtional: 0.1,
+        magicShield_addtional: 0.1, // 每点体质增加内防
+        huajing: 1725,
         primaryAttr: 'atVitalityBase',
         attackType: 'atSolarAttackPowerBase',
         critType: 'atSolarCriticalStrike',
@@ -481,16 +482,19 @@ const XF_FACTOR = {
     '10062': { // 铁牢律
         health: 1.5,
         attack: 0.04,
-        parryBase: 0.1,
+        parryBase: 548,
+        parryBase_addtional: 0.1,
+        parryValue: 2114,
         base: {
             health_override: 1.22,
             physicsShield: 400,
             magicShield: 400
         },
         physicsShield: 914,
-        physicsShield_addtional: 0.1,
+        physicsShield_addtional: 0.1, // 每点体质增加外防
         magicShield: 0,
         magicShield_addtional: 0,
+        huajing: 1725,
         primaryAttr: 'atVitalityBase',
         attackType: 'atPhysicsAttackPowerBase',
         critType: 'atPhysicsCriticalStrike',
@@ -512,6 +516,7 @@ const XF_FACTOR = {
         physicsShield_addtional: 0.1,
         magicShield: 457,
         magicShield_addtional: 0,
+        huajing: 1725,
         primaryAttr: 'atVitalityBase',
         attackType: 'atSolarAndLunarAttackPowerBase',
         critType: 'atSolarAndLunarCriticalStrike',
@@ -521,8 +526,10 @@ const XF_FACTOR = {
     '10389': { // 铁骨衣
         health: 2.2,
         attack: 0.04,
-        parryValue: 0.5,
-        parryBase: 0.15,
+        parryValue: 2114,
+        parryValue_addtional: 0.5,
+        parryBase: 914,
+        parryBase_addtional: 0.15,
         base: {
             health_override: 1.22,
             physicsShield: 400,
@@ -532,6 +539,7 @@ const XF_FACTOR = {
         physicsShield_addtional: 0,
         magicShield: 0,
         magicShield_addtional: 0,
+        huajing: 1725,
         primaryAttr: 'atVitalityBase',
         attackType: 'atPhysicsAttackPowerBase',
         critType: 'atPhysicsCriticalStrike',
@@ -740,12 +748,12 @@ const QIXUE = {
     'atVitality': ['6566', '21285', '14903', '13124', '6822', '16728', '25066'], // 七秀霜风 傲血关山月 分山活脉 铁骨活血 笑尘贞固 北傲星火 太玄神元
     'haste': []
 }
-
+// 大附魔增加数值
 const ENCHANTS = {
-    '山市鬼冢·伤·衣': [291, 243],
-    '山市鬼船·伤·衣': [357, 298],
-    '山市鬼冢·伤·帽': [406, 406],
-    '山市鬼船·伤·帽': [496, 496],
+    '山市鬼冢·伤·衣': [291, 243], // 内外攻击
+    '山市鬼船·伤·衣': [357, 298], // 内外攻击
+    '山市鬼冢·伤·帽': [406, 406], // 破防
+    '山市鬼船·伤·帽': [496, 496], // 破防
 
 }
 
