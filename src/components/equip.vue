@@ -6,7 +6,8 @@
         <i class="w-player-body" v-if="showPosition">
             <img :src="showBodyPic(mount, body)" />
         </i>
-        <a
+        <div class="w-player-equip-list">
+            <a
             class="w-player-equip-item"
             v-for="(item,i) in equips"
             :key="i"
@@ -138,14 +139,15 @@
                 </div>
             </el-popover>
         </a>
+        </div>
     </div>
 </template>
 <script>
 import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
-import colormap from "@/assets/data/color.json";
+import colormap from "../assets/data/color.json";
 import enchant from "@jx3box/jx3box-data/data/bps/enchant.json";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
-import { getEquipOriginScore } from "@/service/gs.js";
+import { getEquipOriginScore } from "../service/gs.js";
 export default {
     name: "Equip",
     props: ["data", "showEquipName", "showPosition", "mount", "body"],

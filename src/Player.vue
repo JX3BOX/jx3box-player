@@ -32,8 +32,8 @@ import Basic from "./components/basic.vue";
 import Equip from "./components/equip.vue";
 import Attrs from "./components/attrs.vue";
 import Talent from "./components/talent.vue";
-import rolename from "@/assets/data/role.json";
-import { getGS } from "@/service/gs.js";
+import rolename from "./assets/data/role.json";
+import { getGS } from "./service/gs.js";
 export default {
     name: "Player",
     props: [

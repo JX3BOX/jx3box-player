@@ -30,10 +30,10 @@
     </div>
 </template>
 <script>
-import { attrMaps, xfAttr } from "@/assets/data/mount_attrs";
+import { attrMaps, xfAttr } from "../assets/data/mount_attrs";
 import { __dataPath } from "@jx3box/jx3box-common/data/jx3box.json";
-import RoleAttribute from "@/service/attr.js";
-import { XF_FACTOR } from "@/assets/data/role_attr";
+import RoleAttribute from "../service/attr.js";
+import { XF_FACTOR } from "../assets/data/role_attr";
 export default {
     name: "Attrs",
     props: ["data"],
