@@ -638,6 +638,13 @@ class RoleAttribute {
         return Math.round(this.getBaseHeal() + primaryHeal);
     }
 
+    // 武器伤害
+    getWeaponDamage() {
+        const equipWeaponDamage = this.getTotalAttr('atMeleeWeaponDamageBase');
+
+        return equipWeaponDamage;
+    }
+
 }
 
 export default RoleAttribute

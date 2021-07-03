@@ -2,10 +2,24 @@
     <div class="w-player-attrs">
         <h2 class="u-title">
             <i class="el-icon-stopwatch"></i> 角色属性
+            <div class="u-filter">
+                <el-popover :width="450">
+                    <div class="u-filter-content">
+                        <el-checkbox-group v-model="showAttrs">
+                            <el-row>
+                                <el-col :span="6" v-for="(key, val) in attrMaps" :key="key">
+                                    <el-checkbox :label="val">{{ key }}</el-checkbox>
+                                </el-col>
+                            </el-row>
+                        </el-checkbox-group>
+                    </div>
+                    <span slot="reference">过滤属性</span>
+                </el-popover>
+            </div>
         </h2>
         <el-row :gutter="20">
             <el-col :span="6" v-for="(item,i) in results" :key="i">
-                <div class="u-item">
+                <div class="u-item" v-if="showAttrs.includes(item.key)">
                     <span class="u-key">{{ item.key | showAttrName }}</span>
                     <span class="u-val">{{ item.val }}</span>
                 </div>
@@ -14,10 +28,8 @@
     </div>
 </template>
 <script>
-import attrMap from "@/assets/data/attr.json";
+import { attrMaps, xfAttr } from "@/assets/data/mount_attrs";
 import { __dataPath } from '@jx3box/jx3box-common/data/jx3box.json'
-import axios from 'axios';
-// import enchants from '@/assets/data/enchants.json'
 import RoleAttribute from '@/service/attr.js';
 import { XF_FACTOR } from '@/assets/data/role_attr'
 export default {
@@ -29,41 +41,51 @@ export default {
             displayNames: [
                 // "atVitalityBase",
             ],
-            roleAttr: null
+            roleAttr: null,
+            xfAttr,
+            attrMaps,
+            showAttrs: []
         };
     },
     computed: {
+        xfId() {
+            return this.data.Kungfu.KungfuID
+        }
     },
     methods: {
         init: function() {
             this.roleAttr = new RoleAttribute(this.data.Equips, this.data.Kungfu, this.data.Person, this.data.Set);
-            const primaryAttr = XF_FACTOR[this.data.Kungfu.KungfuID]['primaryAttr'];
+            const primaryAttr = XF_FACTOR[this.xfId]['primaryAttr'];
 
             this.results = [
+                { key: 'baseAttack', val: this.roleAttr.getBaseAttack() },
+                { key: 'attack', val: this.roleAttr.getAttack() },
+                { key: 'heal', val: this.roleAttr.getHeal() },
+                { key: 'weaponDamage', val: this.roleAttr.getWeaponDamage() },
+                { key: 'surplus', val: this.roleAttr.getSurplus() },
+                { key: 'haste', val: `${this.roleAttr.getHasteRate()}(${this.roleAttr.getHaste()})` },
                 { key: XF_FACTOR[this.data.Kungfu.KungfuID]['primaryAttr'], val: this.roleAttr.getTotalAttr(primaryAttr) },
-                { key: '攻击', val: `${this.roleAttr.getAttack()}(${ this.roleAttr.getBaseAttack()})` },
-                { key: '会心', val: `${this.roleAttr.getCritRate()}(${this.roleAttr.getCrit()})` },
-                { key: '会效', val: this.roleAttr.getCritEffectRate() },
-                { key: 'atHasteBasePercentAdd', val: `${this.roleAttr.getHasteRate()}(${this.roleAttr.getHaste()})` },
-                { key: '破防', val: `${this.roleAttr.getOvercomeRate()}(${this.roleAttr.getOvercome()})` },
-                { key: '无双', val: `${this.roleAttr.getStrainRate()}(${this.roleAttr.getStrain()})` },
-                { key: 'atSurplusValueBase', val: this.roleAttr.getSurplus() },
-                { key: '气血', val: this.roleAttr.getHealth() },
-                { key: '外功防御', val: this.roleAttr.getPhysicsShieldRate() },
-                { key: '内功防御', val: this.roleAttr.getMagicShieldRate() },
-                { key: '招架', val: this.roleAttr.getParryBaseRate() },
-                { key: '拆招', val: this.roleAttr.getParryValue() },
-                { key: '御劲', val: this.roleAttr.getToughnessRate() },
-                { key: '化劲', val: this.roleAttr.getHuajingRate() },
-                { key: '闪躲', val: `${this.roleAttr.getDodgeRate()}(${this.roleAttr.getDodge()})` },
-                { key: '治疗量', val: this.roleAttr.getHeal() },
+                { key: 'crit', val: `${this.roleAttr.getCritRate()}(${this.roleAttr.getCrit()})` },
+                { key: 'critEffect', val: this.roleAttr.getCritEffectRate() },
+                { key: 'overcome', val: `${this.roleAttr.getOvercomeRate()}(${this.roleAttr.getOvercome()})` },
+                { key: 'strain', val: `${this.roleAttr.getStrainRate()}(${this.roleAttr.getStrain()})` },
+                { key: 'health', val: this.roleAttr.getHealth() },
+                { key: 'physicsShield', val: this.roleAttr.getPhysicsShieldRate() },
+                { key: 'magicShield', val: this.roleAttr.getMagicShieldRate() },
+                { key: 'dodge', val: `${this.roleAttr.getDodgeRate()}(${this.roleAttr.getDodge()})` },
+                { key: 'toughness', val: this.roleAttr.getToughnessRate() },
+                { key: 'huajing', val: this.roleAttr.getHuajingRate() },
+                { key: 'parryBase', val: this.roleAttr.getParryBaseRate() },
+                { key: 'parryValue', val: this.roleAttr.getParryValue() },
             ];
+
+            this.showAttrs = this.xfAttr[this.xfId];
         },
     },
     filters: {
         showAttrName: function (key) {
-            if (attrMap[key]) {
-                return attrMap[key];
+            if (attrMaps[key]) {
+                return attrMaps[key];
             }
             return key;
         },
