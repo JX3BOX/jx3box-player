@@ -14,10 +14,9 @@
                     :data="equip_data"
                     :showEquipName="showEquipName"
                     :showPosition="showPosition"
-                    :mount="mount_id"
+                    :mount="mount_pinyin"
                     :body="body_id"
                 />
-
             </div>
 
             <!-- 其它信息 -->
@@ -37,7 +36,14 @@ import rolename from "@/assets/data/role.json";
 import { getGS } from "@/service/gs.js";
 export default {
     name: "Player",
-    props: ["playerId", "server", "role",'darkMode',"showPosition","showEquipName"],
+    props: [
+        "playerId",
+        "server",
+        "role",
+        "darkMode",
+        "showPosition",
+        "showEquipName",
+    ],
     data: function () {
         return {
             data: "",
@@ -62,9 +68,12 @@ export default {
             return this.data && this.data;
         },
         gs: function () {
-            return getGS(this.equip_data);
+            return getGS(this.equip_data, this.mount_id);
         },
-        mount_id: function () {
+        mount_id : function (){
+            return ~~this.data?.Kungfu?.KungfuID
+        },
+        mount_pinyin: function () {
             const name = this.roleName(this.roleName(this.data.Kungfu.Name));
             return this.data && this.data.Kungfu && name;
         },

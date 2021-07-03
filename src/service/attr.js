@@ -537,7 +537,7 @@ class RoleAttribute {
         // 主属性闪躲加成
         const primaryDodge = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['dodge_addtional'] || 0);
 
-        console.log('dodge', primaryDodge, equipDodge, (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0))
+        // console.log('dodge', primaryDodge, equipDodge, (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0))
 
         return Math.round(equipDodge + primaryDodge + (XF_FACTOR[kungfu.KungfuID]['dodge'] || 0))
     }
@@ -556,7 +556,7 @@ class RoleAttribute {
         // 主属性
         const primaryParryBase = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['parryBase_addtional'] || 0);
 
-        console.log('parryBase', equipParryBase, primaryParryBase, (XF_FACTOR[kungfu.KungfuID]['parryBase'] || 0));
+        // console.log('parryBase', equipParryBase, primaryParryBase, (XF_FACTOR[kungfu.KungfuID]['parryBase'] || 0));
 
         return Math.round(equipParryBase + primaryParryBase + (XF_FACTOR[kungfu.KungfuID]['parryBase'] || 0));
     }

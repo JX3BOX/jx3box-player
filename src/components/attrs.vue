@@ -13,7 +13,9 @@
                             </el-row>
                         </el-checkbox-group>
                     </div>
-                    <span slot="reference">过滤属性</span>
+                    <span slot="reference">
+                        <i class="el-icon-s-operation"></i> 过滤属性
+                    </span>
                 </el-popover>
             </div>
         </h2>
@@ -21,7 +23,7 @@
             <el-col :span="6" v-for="(item,i) in results" :key="i">
                 <div class="u-item" v-if="showAttrs.includes(item.key)">
                     <span class="u-key">{{ item.key | showAttrName }}</span>
-                    <span class="u-val">{{ item.val }}</span>
+                    <span class="u-val">{{ item.val }}<span class="u-extra" v-if="item.extra">{{item.extra}}</span></span>
                 </div>
             </el-col>
         </el-row>
@@ -29,9 +31,9 @@
 </template>
 <script>
 import { attrMaps, xfAttr } from "@/assets/data/mount_attrs";
-import { __dataPath } from '@jx3box/jx3box-common/data/jx3box.json'
-import RoleAttribute from '@/service/attr.js';
-import { XF_FACTOR } from '@/assets/data/role_attr'
+import { __dataPath } from "@jx3box/jx3box-common/data/jx3box.json";
+import RoleAttribute from "@/service/attr.js";
+import { XF_FACTOR } from "@/assets/data/role_attr";
 export default {
     name: "Attrs",
     props: ["data"],
@@ -44,39 +46,70 @@ export default {
             roleAttr: null,
             xfAttr,
             attrMaps,
-            showAttrs: []
+            showAttrs: [],
         };
     },
     computed: {
         xfId() {
-            return this.data.Kungfu.KungfuID
-        }
+            return this.data.Kungfu.KungfuID;
+        },
     },
     methods: {
-        init: function() {
-            this.roleAttr = new RoleAttribute(this.data.Equips, this.data.Kungfu, this.data.Person, this.data.Set);
-            const primaryAttr = XF_FACTOR[this.xfId]['primaryAttr'];
+        init: function () {
+            this.roleAttr = new RoleAttribute(
+                this.data.Equips,
+                this.data.Kungfu,
+                this.data.Person,
+                this.data.Set
+            );
+            const primaryAttr = XF_FACTOR[this.xfId]["primaryAttr"];
 
             this.results = [
-                { key: 'baseAttack', val: this.roleAttr.getBaseAttack() },
-                { key: 'attack', val: this.roleAttr.getAttack() },
-                { key: 'heal', val: this.roleAttr.getHeal() },
-                { key: 'weaponDamage', val: this.roleAttr.getWeaponDamage() },
-                { key: 'surplus', val: this.roleAttr.getSurplus() },
-                { key: 'haste', val: `${this.roleAttr.getHasteRate()}(${this.roleAttr.getHaste()})` },
-                { key: XF_FACTOR[this.data.Kungfu.KungfuID]['primaryAttr'], val: this.roleAttr.getTotalAttr(primaryAttr) },
-                { key: 'crit', val: `${this.roleAttr.getCritRate()}(${this.roleAttr.getCrit()})` },
-                { key: 'critEffect', val: this.roleAttr.getCritEffectRate() },
-                { key: 'overcome', val: `${this.roleAttr.getOvercomeRate()}(${this.roleAttr.getOvercome()})` },
-                { key: 'strain', val: `${this.roleAttr.getStrainRate()}(${this.roleAttr.getStrain()})` },
-                { key: 'health', val: this.roleAttr.getHealth() },
-                { key: 'physicsShield', val: this.roleAttr.getPhysicsShieldRate() },
-                { key: 'magicShield', val: this.roleAttr.getMagicShieldRate() },
-                { key: 'dodge', val: `${this.roleAttr.getDodgeRate()}(${this.roleAttr.getDodge()})` },
-                { key: 'toughness', val: this.roleAttr.getToughnessRate() },
-                { key: 'huajing', val: this.roleAttr.getHuajingRate() },
-                { key: 'parryBase', val: this.roleAttr.getParryBaseRate() },
-                { key: 'parryValue', val: this.roleAttr.getParryValue() },
+                { key: "baseAttack", val: this.roleAttr.getBaseAttack() },
+                { key: "attack", val: this.roleAttr.getAttack() },
+                { key: "heal", val: this.roleAttr.getHeal() },
+                { key: "surplus", val: this.roleAttr.getSurplus() },
+                {
+                    key: "haste",
+                    val: this.roleAttr.getHasteRate(),
+                    extra: this.roleAttr.getHaste(),
+                },
+                {
+                    key: "crit",
+                    val: this.roleAttr.getCritRate(),
+                    extra: this.roleAttr.getCrit(),
+                },
+                { key: "critEffect", val: this.roleAttr.getCritEffectRate() },
+                {
+                    key: "overcome",
+                    val: this.roleAttr.getOvercomeRate(),
+                    extra: this.roleAttr.getOvercome(),
+                },
+                {
+                    key: "strain",
+                    val: this.roleAttr.getStrainRate(),
+                    extra: this.roleAttr.getStrain(),
+                },
+                {
+                    key: "physicsShield",
+                    val: this.roleAttr.getPhysicsShieldRate(),
+                },
+                { key: "magicShield", val: this.roleAttr.getMagicShieldRate() },
+                {
+                    key: "dodge",
+                    val: this.roleAttr.getDodgeRate(),
+                    extra: this.roleAttr.getDodge(),
+                },
+                { key: "toughness", val: this.roleAttr.getToughnessRate() },
+                { key: "huajing", val: this.roleAttr.getHuajingRate() },
+                { key: "parryBase", val: this.roleAttr.getParryBaseRate() },
+                { key: "parryValue", val: this.roleAttr.getParryValue() },
+                { key: "weaponDamage", val: this.roleAttr.getWeaponDamage() },
+                { key: "health", val: this.roleAttr.getHealth() },
+                {
+                    key: XF_FACTOR[this.data.Kungfu.KungfuID]["primaryAttr"],
+                    val: this.roleAttr.getTotalAttr(primaryAttr),
+                },
             ];
 
             this.showAttrs = this.xfAttr[this.xfId];
@@ -91,7 +124,7 @@ export default {
         },
     },
     created: function () {
-        this.init()
+        this.init();
     },
 };
 </script>
