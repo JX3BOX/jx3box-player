@@ -1,4 +1,4 @@
-import { equipment_quality_coefficients, equipment_position_coefficients, stoneScore } from "@/assets/data/gs.json";
+import { equipment_quality_coefficients, equipment_position_coefficients, stoneScore } from "../assets/data/gs.json";
 
 // 装备分数 = 品质 * 品质系数 * 部位系数
 function getEquipOriginScore(quality, color, position, mount_id) {

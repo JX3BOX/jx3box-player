@@ -1,5 +1,5 @@
 import { getGrowScore } from './gs';
-import enchants from '@/assets/data/enchants.json';
+import enchants from '../assets/data/enchants.json';
 // 属性计算
 
 const BASE = {

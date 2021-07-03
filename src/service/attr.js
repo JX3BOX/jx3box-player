@@ -1,5 +1,5 @@
 import {getGrowScore} from './gs';
-import {PRE_DEFINED_EMBED_VALUES, QIXUE, VALUE_MAP, XF_DECORATOR, XF_FACTOR, ENCHANTS} from '@/assets/data/role_attr'
+import {PRE_DEFINED_EMBED_VALUES, QIXUE, VALUE_MAP, XF_DECORATOR, XF_FACTOR, ENCHANTS} from '../assets/data/role_attr'
 
 class RoleAttribute {
     constructor(equips, kungfu, person, set) {
