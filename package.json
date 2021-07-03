@@ -1,5 +1,5 @@
 {
-  "name": "jx3box-player",
+  "name": "@jx3box/jx3box-player",
   "version": "0.1.0",
   "description": "玩家角色信息",
   "main": "index.js",
