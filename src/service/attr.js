@@ -32,6 +32,14 @@ class RoleAttribute {
     }
     // 初始化基础属性
     initBase() {
+        if (this.kungfu.KungfuID === "10145") {
+            // 山居剑意
+            this.equips = this.equips.filter(equip => equip.UcPos !== '0')
+        }
+        if (this.kungfu.KungfuID === "10144") {
+            // 问水
+            this.equips = this.equips.filter(equip => equip.UcPos !== '1')
+        }
         this.equips.forEach(equip => {
             if (equip.SetID && equip.Set) {
                 if (!this.SET[equip.SetID]) this.SET[equip.SetID] = equip.Set;
@@ -105,28 +113,32 @@ class RoleAttribute {
             
             const enchantAttr = Number(enchant && enchant.Attribute1Value1) || 0;
 
-            // 切糕效果
-            let setAttr = 0;
-            if (equip.SetID && equip.Set) {
+            
+            equipAttr += baseAttr + growthBase + growthAttr + fiveStoneAttr + colorStoneAttr + enchantAttr;
+        });
 
-                if (!SETNUM[equip.SetID]) {
-                    SETNUM[equip.SetID] = 1;
-                } else {
-                    SETNUM[equip.SetID]++;
-                }
-                // 四件套时的属性增加
-                if (SETNUM[equip.SetID] > 3) {
-                    const temp = this.SET[equip.SetID][1];
-                    setAttr = temp['Desc'] === attr ? Number(temp['Param1Max']) : 0
-                } else if (SETNUM[equip.SetID] > 1) {
-                    // 二件套时属性增加
-                    const temp = this.SET[equip.SetID][0];
-                    setAttr = temp['Desc'] === attr ? Number(temp['Param1Max']) : 0
+        // 切糕效果
+        let setAttr = 0;
+
+        // 四件套时的属性增加
+        for (const key in this.SET) {
+            if (this.set[key]) {
+                if (this.set[key] >= 4) {
+                    let temp;
+                    this.SET[key].forEach(s => {
+                        if (attr === s.Desc) {
+                            if (attr === 'atAllTypeCriticalStrike') console.log(s.Desc === attr)
+                            temp = s
+                        } 
+                    })
+                    setAttr = Number(temp?.Param1Max) || 0;
+                    break;
+                } else if (4 > this.set[key] >= 2) {
+                    const temp = this.SET[key][0];
+                    setAttr = Number(temp?.Param1Max) || 0;
                 }
             }
-
-            equipAttr += baseAttr + growthBase + growthAttr + fiveStoneAttr + colorStoneAttr + enchantAttr + setAttr;
-        });
+        }
 
         // 奇穴加成
         let qixue = '';
@@ -143,7 +155,7 @@ class RoleAttribute {
             return Math.floor((xfAttr + equipAttr) * (1 + 102 / 1024));
         }
 
-        return xfAttr + equipAttr;
+        return xfAttr + equipAttr + setAttr;
     }
 
     // 获取基础攻击力
@@ -271,7 +283,7 @@ class RoleAttribute {
         // 心法加成会心等级
         const primaryCrit = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['crit'] || 0);
 
-        // console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
+        console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
 
         // console.log(Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit))
 
@@ -437,12 +449,12 @@ class RoleAttribute {
         return equipSurplus + primarySurplus;
     }
 
-    // 气血值
+    // 气血值 TODO: 血量仍有部分不正确的  fuyan藏剑
     getHealth() {
         const kungfu = this.kungfu;
         const cof = Math.round((XF_FACTOR[this.kungfu.KungfuID]['base']['health_override']) * 1024) / 1024;
 
-        const equipHealth = this.getTotalAttr('atMaxLifeAdditional');
+        const equipHealth = this.getTotalAttr('atMaxLifeAdditional') + this.getTotalAttr('atMaxLifeBase');
 
         const primaryHealth = this.primaryAttrVal * (XF_FACTOR[kungfu.KungfuID]['health'] || 0);
 

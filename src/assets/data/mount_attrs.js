@@ -3,20 +3,21 @@ const xfAttr = {
     "10080": ["heal", "atSpiritBase", "crit", "critEffect", "haste", "health", "toughness", "huajing"], // 云裳
     "10176": ["heal", "atSpiritBase", "crit", "critEffect", "haste", "health", "toughness", "huajing"], // 补天
     "10448": ["heal", "atSpiritBase", "crit", "critEffect", "haste", "health", "toughness", "huajing"], // 相知
+
     "10002": ["atVitalityBase", "haste", "surplus", "physicsShield", "magicShield", "health", "dodge", "toughness", "parryBase", "parryValue"], // 洗髓
     "10062": ["atVitalityBase", "haste", "surplus", "physicsShield", "magicShield", "health", "dodge", "toughness", "parryBase", "parryValue"], // 铁牢
     "10243": ["atVitalityBase", "haste", "surplus", "physicsShield", "magicShield", "health", "dodge", "toughness", "parryBase", "parryValue"], // 明尊
     "10389": ["atVitalityBase", "haste", "surplus", "physicsShield", "magicShield", "health", "dodge", "toughness", "parryBase", "parryValue"], // 铁骨
+
     "10003": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 易筋经
     "10014": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 紫霞功
     "10015": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 太虚剑意
     "10021": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 花间游
     "10026": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 傲血战意
-    "10533": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 凌海诀
-    "10144": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 冰心诀
-    "10145": ["baseAttack", "attack", "weaponDamage", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 问水诀
-    "10175": ["baseAttack", "attack", "weaponDamage", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 山居剑意
-    "10003": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 毒经
+    "10081": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 冰心诀
+    "10144": ["baseAttack", "attack", "weaponDamage", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 问水诀
+    "10145": ["baseAttack", "attack", "weaponDamage", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 山居剑意
+    "10175": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 毒经
     "10224": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 惊羽诀
     "10225": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 田螺诡道
     "10242": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 焚影圣诀
@@ -24,6 +25,7 @@ const xfAttr = {
     "10390": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 分山劲
     "10447": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 莫问
     "10464": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 北傲诀
+    "10533": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 凌海诀
     "10585": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 隐龙诀
     "10615": ["baseAttack", "attack", "surplus", "haste", "crit", "critEffect", "overcome", "strain", "health"], // 太玄经
 };

@@ -21,7 +21,7 @@
         </h2>
         <el-row :gutter="20">
             <el-col :span="6" v-for="(item,i) in results" :key="i">
-                <div class="u-item" v-if="showAttrs.includes(item.key)">
+                <div class="u-item" v-if="showAttrs && showAttrs.includes(item.key)">
                     <span class="u-key">{{ item.key | showAttrName }}</span>
                     <span class="u-val">{{ item.val }}<span class="u-extra" v-if="item.extra">{{item.extra}}</span></span>
                 </div>
@@ -107,8 +107,24 @@ export default {
                 { key: "weaponDamage", val: this.roleAttr.getWeaponDamage() },
                 { key: "health", val: this.roleAttr.getHealth() },
                 {
-                    key: XF_FACTOR[this.data.Kungfu.KungfuID]["primaryAttr"],
-                    val: this.roleAttr.getTotalAttr(primaryAttr),
+                    key: "atSpiritBase",
+                    val: this.roleAttr.getTotalAttr("atSpiritBase"),
+                },
+                {
+                    key: "atVitalityBase",
+                    val: this.roleAttr.getTotalAttr("atVitalityBase"),
+                },
+                {
+                    key: "atSpunkBase",
+                    val: this.roleAttr.getTotalAttr("atSpunkBase"),
+                },
+                {
+                    key: "atStrengthBase",
+                    val: this.roleAttr.getTotalAttr("atStrengthBase"),
+                },
+                {
+                    key: "atAgilityBase",
+                    val: this.roleAttr.getTotalAttr("atAgilityBase"),
                 },
             ];
 
