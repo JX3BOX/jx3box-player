@@ -132,10 +132,11 @@ class RoleAttribute {
                         } 
                     })
                     setAttr = Number(temp && temp.Param1Max) || 0;
-                    break;
-                } else if (4 > this.set[key] >= 2) {
-                    const temp = this.SET[key][0];
-                    setAttr = Number(temp && temp.Param1Max) || 0;
+                } else if (this.set[key] >= 2 && this.set[key] < 4) {
+                    if (this.SET[key][0].Desc === attr) {
+                        let temp = this.SET[key][0];
+                        setAttr = Number(temp && temp.Param1Max) || 0;
+                    }
                 }
             }
         }
@@ -256,7 +257,7 @@ class RoleAttribute {
         // 身法加成 外功会心 * 0.64
         decoratedCrit.PHYSICS = this.getTotalAttr('atAgilityBase') * 0.64;
         // 根骨加成 内功会心 * 0.64
-        decoratedCrit.MAGIC = this.getTotalAttr('atSpiritBase') * 0.64;
+        decoratedCrit.MAGIC = Math.floor(this.getTotalAttr('atSpiritBase') * 0.64);
 
         // 心法基础会心
         const [ critDecorator ] =  Object.keys(kungfu.Attrib).filter(a => a.includes('CriticalStrike'));
@@ -283,11 +284,11 @@ class RoleAttribute {
         // 心法加成会心等级
         const primaryCrit = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['crit'] || 0);
 
-        // console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
+        console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
 
-        // console.log(Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit))
+        console.log(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit)
 
-        return Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit);
+        return Math.floor(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit);
     }
 
     // 会心率
