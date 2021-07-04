@@ -58,5 +58,7 @@ export default {
 <style lang="less">
 #app {
     padding: 200px;
+    margin:0 auto;
+    max-width:980px;
 }
 </style>

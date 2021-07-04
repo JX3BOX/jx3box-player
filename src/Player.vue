@@ -15,6 +15,7 @@
                     :showEquipName="showEquipName"
                     :showPosition="showPosition"
                     :mount="mount_pinyin"
+                    :mount_id="mount_id"
                     :body="body_id"
                 />
             </div>

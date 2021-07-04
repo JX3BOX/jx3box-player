@@ -123,7 +123,7 @@
                     <!-- 其它 -->
                     <div class="u-line u-other">
                         <span class="u-quality">品质等级{{ item.Quality }}</span>
-                        <span class="u-gs">装备分数{{ formula(item.Quality,item.Color,item.UcPos)}}</span>
+                        <span class="u-gs">装备分数{{ formula(item.Quality,item.Color,item.UcPos,mount_id)}}</span>
                         <span>适用门派：{{ item.BelongForce }}</span>
                     </div>
                 </div>
@@ -150,7 +150,7 @@ import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import { getEquipOriginScore } from "../service/gs.js";
 export default {
     name: "Equip",
-    props: ["data", "showEquipName", "showPosition", "mount", "body"],
+    props: ["data", "showEquipName", "showPosition", "mount", "body","mount_id"],
     data: function () {
         return {
             setlist: [],

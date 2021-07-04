@@ -127,7 +127,7 @@ class RoleAttribute {
                     let temp;
                     this.SET[key].forEach(s => {
                         if (attr === s.Desc) {
-                            if (attr === 'atAllTypeCriticalStrike') console.log(s.Desc === attr)
+                            if (attr === 'atAllTypeCriticalStrike') //console.log(s.Desc === attr)
                             temp = s
                         } 
                     })
@@ -283,7 +283,7 @@ class RoleAttribute {
         // 心法加成会心等级
         const primaryCrit = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['crit'] || 0);
 
-        console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
+        // console.log('crit', decoratedCrit[decorator[1]], xfCrit, equipCrit, allEquipCrit, primaryCrit);
 
         // console.log(Math.round(decoratedCrit[decorator[1]] + xfCrit + equipCrit + allEquipCrit + primaryCrit))
 
