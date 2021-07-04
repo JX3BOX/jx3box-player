@@ -357,10 +357,8 @@ class RoleAttribute {
         return `${(Math.min(haste / cof, 25)).toFixed(2)}%`;
     }
 
-    /**
-     * 破防 = 力道/元气破防加成 + 心法基础破防 + 装备破防 + 主属性破防加成 + 大附魔加成
-     */
-    getOvercome() {
+    // 基础破防
+    getBaseOvercome() {
         const decoratedOvercome = {
             PHYSICS: 0,
             MAGIC: 0
@@ -406,12 +404,17 @@ class RoleAttribute {
             equipOvercome = this.getTotalAttr(overcomeType);
         }
 
+        return Math.round(decoratedOvercome[decorator[1]] + xfOvercome + equipOvercome + wtAttr)
+    }
+
+    /**
+     * 破防 = 力道/元气破防加成 + 心法基础破防 + 装备破防 + 主属性破防加成 + 大附魔加成
+     */
+    getOvercome() {
         // 主属性破防加成
         const primaryOvercome = this.primaryAttrVal * (XF_FACTOR[this.kungfu.KungfuID]['overcome'] || 0);
 
-        // console.log(decoratedOvercome[decorator[1]], xfOvercome, equipOvercome, primaryOvercome)
-
-        return Math.floor(decoratedOvercome[decorator[1]] + xfOvercome + equipOvercome + primaryOvercome + wtAttr)
+        return Math.round(this.getBaseOvercome() + primaryOvercome)
     }
     // 破防
     getOvercomeRate() {

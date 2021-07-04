@@ -24,7 +24,7 @@ export default {
             // playerId: "17217706",  //醉栩凌雪
             // playerId: "2382163",  //yyz
             // playerId: "10105523",  //浮烟藏剑
-            playerId: "28013151",  //浮烟藏剑
+            playerId: "21041450",  //浮烟藏剑
 
             // 坦克
             // playerId: "17806618",  //醉栩天策
@@ -41,8 +41,8 @@ export default {
             // playerId: "26522945",  //浮烟奶花
             // playerId: "10105521",  //浮烟奶歌
             // server: '蝶恋花',
-            server: '天鹅坪',
-            // server: '唯我独尊',
+            // server: '天鹅坪',
+            server: '唯我独尊',
             
 
             // playerId: "21041450",
