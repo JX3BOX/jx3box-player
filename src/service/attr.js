@@ -127,15 +127,15 @@ class RoleAttribute {
                     let temp;
                     this.SET[key].forEach(s => {
                         if (attr === s.Desc) {
-                            if (attr === 'atAllTypeCriticalStrike') //console.log(s.Desc === attr)
+                            // if (attr === 'atAllTypeCriticalStrike') console.log(s.Desc === attr)
                             temp = s
                         } 
                     })
-                    setAttr = Number(temp?.Param1Max) || 0;
+                    setAttr = Number(temp && temp.Param1Max) || 0;
                     break;
                 } else if (4 > this.set[key] >= 2) {
                     const temp = this.SET[key][0];
-                    setAttr = Number(temp?.Param1Max) || 0;
+                    setAttr = Number(temp && temp.Param1Max) || 0;
                 }
             }
         }
