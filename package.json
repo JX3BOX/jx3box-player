@@ -1,6 +1,6 @@
 {
   "name": "@jx3box/jx3box-player",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "玩家角色信息",
   "main": "index.js",
   "repository": {
