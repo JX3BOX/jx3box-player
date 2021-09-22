@@ -93,7 +93,7 @@ export default {
         loadData: function () {
             this.loading = true;
             $node()
-                .get(`/team/role/${this.player_id}`, {
+                .get(`/team/---rolexxx/${this.player_id}`, {
                     params: {
                         server: this.player_server,
                         zone: this.player_zone,

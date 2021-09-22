@@ -1,6 +1,6 @@
 {
   "name": "@jx3box/jx3box-player",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "玩家角色信息",
   "main": "index.js",
   "repository": {
@@ -13,13 +13,12 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "inspect": "vue inspect > output.js",
-    "update": "npm install --registry https://registry.npmjs.org @jx3box/jx3box-common@latest @jx3box/jx3box-data@latest"
+    "update": "npm install --registry https://registry.npmjs.org @jx3box/jx3box-common@latest @jx3box/jx3box-data@latest",
+    "enchant":"node ./tools/enchant.js"
   },
   "dependencies": {
-    "@jx3box/jx3box-common": "^6.4.7",
+    "@jx3box/jx3box-common": "^6.6.5",
     "@jx3box/jx3box-common-ui": "^4.6.2",
-    "@jx3box/jx3box-data": "^1.1.2",
-    "@jx3box/jx3box-page": "^0.4.9",
     "axios": "^0.19.2",
     "core-js": "^3.4.3",
     "element-ui": "^2.13.0",

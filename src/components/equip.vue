@@ -145,7 +145,7 @@
 <script>
 import { __imgPath } from "@jx3box/jx3box-common/data/jx3box.json";
 import colormap from "../assets/data/color.json";
-import enchant from "@jx3box/jx3box-data/data/bps/enchant.json";
+import enchant from "../assets/data/enchant.json";
 import { iconLink, getLink } from "@jx3box/jx3box-common/js/utils";
 import { getEquipOriginScore } from "../service/gs.js";
 export default {
